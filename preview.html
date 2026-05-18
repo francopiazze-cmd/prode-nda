@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Preview · Prode NDA — Mundial 2026</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          nda: {
+            // Paleta oficial NDA (brandbook 15/08/2023)
+            primary: "#182aa4",
+            accent:  "#4aeaea",
+            success: "#00ffa1",
+            dark:    "#0a1452",
+            soft:    "#F5F7FB"
+          }
+        },
+        fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] }
+      }
+    }
+  }
+</script>
+<style type="text/tailwindcss">
+  body { @apply bg-nda-soft text-nda-dark min-h-screen; font-family: Inter, system-ui, sans-serif; }
+  .btn-primary { @apply inline-flex items-center justify-center rounded-xl bg-nda-primary text-white font-semibold px-5 py-3 shadow-sm transition hover:bg-nda-dark active:scale-[0.98]; }
+  .btn-accent  { @apply inline-flex items-center justify-center rounded-xl bg-nda-accent text-nda-dark font-bold px-5 py-3 transition hover:brightness-95 active:scale-[0.98]; box-shadow: 0 4px 20px rgba(74,234,234,0.4); }
+  .btn-ghost   { @apply inline-flex items-center justify-center rounded-xl border border-nda-primary/20 text-nda-primary font-medium px-4 py-2 transition hover:bg-nda-soft; }
+  .btn-ghost-light { @apply inline-flex items-center justify-center rounded-xl border border-white/30 text-white font-medium px-5 py-3 transition hover:bg-white/10; }
+  .input       { @apply w-full rounded-xl border border-nda-primary/20 bg-white px-4 py-3 text-base outline-none transition focus:border-nda-primary focus:ring-2 focus:ring-nda-primary/20; }
+  .card        { @apply rounded-2xl bg-white shadow-sm border border-nda-primary/10 p-4; }
+  .chip        { @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider; }
+</style>
+<style>
+  .hero-gradient {
+    background:
+      radial-gradient(120% 80% at 80% 0%, rgba(74,234,234,0.35) 0%, rgba(24,42,164,0) 50%),
+      radial-gradient(80% 60% at 0% 100%, rgba(0,255,161,0.18) 0%, rgba(24,42,164,0) 55%),
+      linear-gradient(135deg, #182aa4 0%, #0a1452 100%);
+  }
+  .card-highlight {
+    position: relative;
+    border-radius: 1rem;
+    background: white;
+    padding: 1.25rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    border: 2px solid transparent;
+    background-image: linear-gradient(white, white), linear-gradient(135deg, #4aeaea 0%, #00ffa1 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
+  .glow-cyan {
+    box-shadow: 0 0 0 1px rgba(74,234,234,0.4), 0 8px 30px -8px rgba(74,234,234,0.45);
+  }
+  .seg-on { background:#182aa4 !important; color:#fff !important; border-color:#182aa4 !important; }
+</style>
+</head>
+<body>
+
+<!-- Banner de preview -->
+<div class="bg-nda-accent text-nda-dark text-xs text-center py-2 px-4 font-semibold">
+  PREVIEW VISUAL — datos de ejemplo. La app real tiene login, base de datos y resultados en vivo.
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-nda-primary/10">
+  <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
+    <a href="#" onclick="show('landing')" class="flex items-center gap-2">
+      <img src="public/nda-monogram-blue.png" alt="NDA" class="h-7 w-auto" />
+      <span class="text-nda-primary font-bold">Prode</span>
+    </a>
+    <nav class="flex items-center gap-3 text-sm">
+      <a onclick="show('landing')" class="cursor-pointer hover:text-nda-primary">Inicio</a>
+      <a onclick="show('registro')" class="cursor-pointer hover:text-nda-primary">Registro</a>
+      <a onclick="show('login')" class="cursor-pointer hover:text-nda-primary">Login</a>
+      <a onclick="show('jugar')" class="cursor-pointer hover:text-nda-primary">Jugar</a>
+      <a onclick="show('ranking')" class="cursor-pointer hover:text-nda-primary">Ranking</a>
+      <a onclick="show('perfil')" class="cursor-pointer hover:text-nda-primary">Perfil</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ VISTA: LANDING ============ -->
+<section id="landing" class="view">
+  <!-- HERO -->
+  <div class="hero-gradient text-white relative overflow-hidden">
+    <div class="max-w-3xl mx-auto px-4 pt-12 pb-16 sm:pt-20 sm:pb-24 text-center relative z-10">
+      <span class="chip bg-nda-accent/20 text-nda-accent border border-nda-accent/40">
+        <span class="inline-block w-2 h-2 rounded-full bg-nda-accent animate-pulse"></span>
+        Mundial 2026 · 11 jun → 19 jul
+      </span>
+      <h1 class="mt-5 text-4xl sm:text-6xl font-extrabold leading-tight tracking-tight">
+        Acertá lo inesperado.<br />
+        <span class="text-nda-accent">Ganá una Smart TV.</span>
+      </h1>
+      <p class="mt-5 text-lg sm:text-xl text-white/85 max-w-xl mx-auto">
+        El prode del Mundial 2026, cortesía de NDA Asesores. Predecí los resultados, invitá amigos y competí por una Smart TV.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <a onclick="show('registro')" class="btn-accent cursor-pointer">Jugar gratis</a>
+        <a onclick="show('login')" class="btn-ghost-light cursor-pointer">Ya tengo cuenta</a>
+      </div>
+      <p class="mt-3 text-xs text-white/60">Tarda menos de 1 minuto registrarse · 100% gratis</p>
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto px-4 py-12 space-y-12">
+
+    <!-- CÓMO SE JUEGA -->
+    <section>
+      <h2 class="text-center text-2xl sm:text-3xl font-extrabold text-nda-dark mb-2">¿Cómo se juega?</h2>
+      <p class="text-center text-nda-dark/70 mb-8">Más certero, más puntos. Más amigos, más chance.</p>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="card group hover:shadow-md transition">
+          <div class="w-10 h-10 rounded-lg bg-nda-primary/10 text-nda-primary grid place-items-center mb-3 group-hover:bg-nda-accent group-hover:text-nda-dark transition">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5 5l4 4M15 15l4 4M5 19l4-4M15 9l4-4"/></svg>
+          </div>
+          <h3 class="font-bold text-nda-dark mb-1">Acertá y sumá</h3>
+          <p class="text-sm text-nda-dark/75">5 pts por resultado exacto · 3 pts por ganador y diferencia · 1 pt por ganador. En eliminatorias, todo x2.</p>
+        </div>
+        <div class="card group hover:shadow-md transition">
+          <div class="w-10 h-10 rounded-lg bg-nda-primary/10 text-nda-primary grid place-items-center mb-3 group-hover:bg-nda-accent group-hover:text-nda-dark transition">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-3-3.87"/><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+          </div>
+          <h3 class="font-bold text-nda-dark mb-1">Invitá y ganá más</h3>
+          <p class="text-sm text-nda-dark/75">+2 pts por cada amigo que juegue (hasta 10 = 20 pts). Si invitás más, vas por el premio Embajador.</p>
+        </div>
+        <div class="card group hover:shadow-md transition">
+          <div class="w-10 h-10 rounded-lg bg-nda-primary/10 text-nda-primary grid place-items-center mb-3 group-hover:bg-nda-accent group-hover:text-nda-dark transition">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+          </div>
+          <h3 class="font-bold text-nda-dark mb-1">Tabla en vivo</h3>
+          <p class="text-sm text-nda-dark/75">Mirá tu ranking actualizarse partido a partido. Competí contra todo el país.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BONUS ASEGURADO -->
+    <section class="card-highlight">
+      <div class="flex items-start gap-4">
+        <div class="shrink-0 w-12 h-12 rounded-xl bg-nda-accent/20 grid place-items-center text-nda-primary">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-nda-primary">Bonus para clientes</p>
+          <h3 class="font-extrabold text-xl text-nda-dark mt-1">¿Sos asegurado de NDA? Arrancás con +20 puntos</h3>
+          <p class="text-sm text-nda-dark/80 mt-2">
+            Si ya tenés una póliza con nosotros, cargá tu patente al registrarte y la validamos en hasta 48 hs. hábiles.
+            Una vez confirmada, sumás <strong>20 puntos de ventaja</strong> al ranking — todo por habilidad, no por sorteo.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PREMIOS -->
+    <section>
+      <h2 class="text-center text-2xl sm:text-3xl font-extrabold text-nda-dark mb-8">Los premios</h2>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div class="card flex items-center gap-4 ring-2 ring-nda-accent">
+          <div class="shrink-0 w-14 h-14 rounded-xl bg-nda-accent text-nda-dark grid place-items-center">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="13" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
+          </div>
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase tracking-wider text-nda-primary">1°</p>
+            <p class="font-bold text-nda-dark">Smart TV 55″</p>
+            <p class="text-xs text-nda-dark/60">Modelo a confirmar</p>
+          </div>
+        </div>
+        <div class="card flex items-center gap-4">
+          <div class="shrink-0 w-14 h-14 rounded-xl bg-nda-soft text-nda-primary grid place-items-center">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M6 2v3M10 2v3M14 2v3"/></svg>
+          </div>
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase tracking-wider text-nda-primary">2°</p>
+            <p class="font-bold text-nda-dark">Cafetera Nespresso</p>
+            <p class="text-xs text-nda-dark/60">Modelo a confirmar</p>
+          </div>
+        </div>
+        <div class="card flex items-center gap-4">
+          <div class="shrink-0 w-14 h-14 rounded-xl bg-nda-soft text-nda-primary grid place-items-center">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 11h14a7 7 0 0 1-14 0z"/><path d="M3 11h18"/><path d="M12 7V3M10 5h4"/></svg>
+          </div>
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase tracking-wider text-nda-primary">3°</p>
+            <p class="font-bold text-nda-dark">Gift card cena</p>
+            <p class="text-xs text-nda-dark/60">Kansas Nordelta</p>
+          </div>
+        </div>
+        <div class="card flex items-center gap-4">
+          <div class="shrink-0 w-14 h-14 rounded-xl bg-nda-soft text-nda-primary grid place-items-center">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-8v18l-18-8z"/><path d="M11 11v6"/></svg>
+          </div>
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase tracking-wider text-nda-primary">Embajador</p>
+            <p class="font-bold text-nda-dark">Premio aparte</p>
+            <p class="text-xs text-nda-dark/60">Para quien más amigos refiera (a partir del 11°)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CÓMO FUNCIONA -->
+    <section class="card !p-6">
+      <h2 class="font-extrabold text-xl mb-4 text-nda-primary">Paso a paso</h2>
+      <ol class="space-y-3">
+        <li class="flex items-start gap-3">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-nda-accent text-nda-dark text-sm font-bold grid place-items-center">1</span>
+          <span class="text-nda-dark/90 pt-0.5">Te registrás con tu mail o Google (1 minuto).</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-nda-accent text-nda-dark text-sm font-bold grid place-items-center">2</span>
+          <span class="text-nda-dark/90 pt-0.5">Cargás tu pronóstico antes de cada partido (cierra 5 min antes del kickoff).</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-nda-accent text-nda-dark text-sm font-bold grid place-items-center">3</span>
+          <span class="text-nda-dark/90 pt-0.5">Compartís tu link de invitación por WhatsApp y sumás puntos por cada amigo que juega.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-nda-accent text-nda-dark text-sm font-bold grid place-items-center">4</span>
+          <span class="text-nda-dark/90 pt-0.5">El que más puntos tenga al cierre del Mundial se lleva la TV.</span>
+        </li>
+      </ol>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="text-center py-4">
+      <a onclick="show('registro')" class="btn-accent cursor-pointer">Quiero jugar</a>
+      <p class="mt-3 text-xs text-nda-dark/60">Concurso de habilidad organizado por NDA Asesores.</p>
+    </section>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-nda-dark text-white/80 mt-8">
+    <div class="max-w-3xl mx-auto px-4 py-10 grid sm:grid-cols-3 gap-8 text-sm">
+      <div>
+        <img src="public/nda-logo.png" alt="NDA Asesores de Seguros" class="h-20 w-auto" />
+        <p class="mt-3 text-xs leading-relaxed">Brokers de seguros en Nordelta. Cubrimos lo inesperado para que vos juegues tranquilo.</p>
+      </div>
+      <div>
+        <p class="text-white font-semibold mb-2">Contacto</p>
+        <p class="text-xs">Agustín M. García 5971</p>
+        <p class="text-xs">Delta Point, Nordelta</p>
+        <p class="text-xs mt-2">📞 11 6000 1754</p>
+        <p class="text-xs">✉ info@ndasesores.com.ar</p>
+      </div>
+      <div>
+        <p class="text-white font-semibold mb-2">Prode NDA</p>
+        <ul class="text-xs space-y-1">
+          <li><a class="hover:text-nda-accent cursor-pointer">Bases y condiciones</a></li>
+          <li><a class="hover:text-nda-accent cursor-pointer">Política de privacidad</a></li>
+          <li><a href="https://www.ndasesores.com.ar" target="_blank" class="hover:text-nda-accent">Sitio web NDA ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-white/10">
+      <div class="max-w-3xl mx-auto px-4 py-4 text-xs text-white/50 flex flex-col sm:flex-row justify-between gap-2">
+        <p>© 2026 NDA Asesores. Todos los derechos reservados.</p>
+        <p>Concurso de habilidad · Sin compra obligatoria.</p>
+      </div>
+    </div>
+  </footer>
+</section>
+
+<!-- ============ VISTA: LOGIN ============ -->
+<section id="login" class="view hidden">
+  <div class="min-h-screen hero-gradient flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+      <a onclick="show('landing')" class="flex items-center justify-center gap-3 mb-8 cursor-pointer">
+        <img src="public/nda-logo.png" alt="NDA Asesores de Seguros" class="h-20 w-auto" />
+        <span class="text-xl font-bold text-white">· Prode</span>
+      </a>
+      <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+        <h1 class="text-2xl font-extrabold text-nda-dark mb-1">Ingresar</h1>
+        <p class="text-sm text-nda-dark/70 mb-6">Te mandamos un link a tu mail para entrar.</p>
+        <button class="w-full inline-flex items-center justify-center gap-3 rounded-xl border-2 border-nda-dark/10 px-5 py-3 font-semibold text-nda-dark hover:bg-nda-soft transition">
+          <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continuar con Google
+        </button>
+        <div class="my-5 flex items-center gap-3 text-xs text-nda-dark/40 uppercase tracking-wider">
+          <div class="flex-1 h-px bg-nda-dark/10"></div> o <div class="flex-1 h-px bg-nda-dark/10"></div>
+        </div>
+        <form onsubmit="event.preventDefault(); show('jugar');" class="space-y-3">
+          <input type="email" placeholder="tu@email.com" class="input" required />
+          <button type="submit" class="btn-primary w-full">Enviarme el link</button>
+        </form>
+        <p class="mt-6 text-sm text-center text-nda-dark/70">¿No tenés cuenta? <a onclick="show('registro')" class="underline font-semibold text-nda-primary cursor-pointer">Registrate</a></p>
+      </div>
+      <p class="text-center text-xs text-white/60 mt-6">Sin contraseñas, sin vueltas. Magic link directo al mail.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VISTA: REGISTRO ============ -->
+<section id="registro" class="view max-w-md mx-auto px-4 py-12 hidden">
+  <h1 class="text-3xl font-extrabold text-nda-dark mb-2">Crear cuenta</h1>
+  <p class="text-nda-dark/70 mb-6">Tarda menos de 1 minuto.</p>
+
+  <button class="w-full inline-flex items-center justify-center gap-3 rounded-xl border-2 border-nda-dark/10 px-5 py-3 font-semibold text-nda-dark hover:bg-nda-soft transition mb-3">
+    <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+    Continuar con Google
+  </button>
+  <div class="my-5 flex items-center gap-3 text-xs text-nda-dark/40 uppercase tracking-wider">
+    <div class="flex-1 h-px bg-nda-dark/10"></div> o registrate con mail <div class="flex-1 h-px bg-nda-dark/10"></div>
+  </div>
+
+  <div class="mb-6 rounded-xl bg-nda-accent/20 border border-nda-accent/40 px-4 py-3 text-sm">
+    Te invitó <strong>Carlos Méndez</strong>. Cuando juegues tu primer pronóstico, ¡le sumás 2 puntos!
+  </div>
+
+  <form class="space-y-4" onsubmit="event.preventDefault(); show('jugar');">
+    <div>
+      <label class="block text-sm font-medium text-nda-dark mb-1">Nombre y apellido</label>
+      <input class="input" placeholder="Juan Pérez" required />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-nda-dark mb-1">Email</label>
+      <input class="input" type="email" placeholder="tu@email.com" required />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-nda-dark mb-1">WhatsApp</label>
+      <input class="input" type="tel" placeholder="+54 11 1234-5678" />
+      <p class="mt-1 text-xs text-nda-dark/60">Solo para avisos del prode. Nunca llamamos sin avisar.</p>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-nda-dark mb-1">Provincia</label>
+      <select class="input" required>
+        <option value="">Elegí tu provincia</option>
+        <option>CABA</option><option>Buenos Aires</option><option>Córdoba</option>
+        <option>Santa Fe</option><option>Mendoza</option><option>Tucumán</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-nda-dark mb-1">¿Qué seguros tenés contratados?</label>
+      <p class="mb-2 text-xs text-nda-dark/60">Opcional. Marcá los que correspondan.</p>
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="this.classList.toggle('seg-on')" class="seg rounded-xl border border-nda-primary/20 hover:bg-nda-soft px-3 py-2 text-sm text-left">Auto</button>
+        <button type="button" onclick="this.classList.toggle('seg-on')" class="seg rounded-xl border border-nda-primary/20 hover:bg-nda-soft px-3 py-2 text-sm text-left">Hogar</button>
+        <button type="button" onclick="this.classList.toggle('seg-on')" class="seg rounded-xl border border-nda-primary/20 hover:bg-nda-soft px-3 py-2 text-sm text-left">Vida</button>
+        <button type="button" onclick="this.classList.toggle('seg-on')" class="seg rounded-xl border border-nda-primary/20 hover:bg-nda-soft px-3 py-2 text-sm text-left">ART</button>
+        <button type="button" onclick="this.classList.toggle('seg-on')" class="seg rounded-xl border border-nda-primary/20 hover:bg-nda-soft px-3 py-2 text-sm text-left">Comercio / PyME</button>
+        <button type="button" onclick="this.classList.toggle('seg-on')" class="seg rounded-xl border border-nda-primary/20 hover:bg-nda-soft px-3 py-2 text-sm text-left">Ninguno todavía</button>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border-2 border-nda-accent bg-nda-accent/10 p-4 space-y-3">
+      <div>
+        <p class="font-bold text-nda-dark text-sm uppercase tracking-wider">¿Sos cliente de NDA? Arrancás con +20 puntos</p>
+        <p class="text-xs text-nda-dark/70 mt-1">Si tenés una póliza activa con nosotros, sumás 20 puntos de ventaja apenas el equipo valide tu patente.</p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-nda-dark mb-2">¿Ya sos asegurado de NDA Seguros?</p>
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="setNdaClient(true)" id="nda-yes" class="rounded-xl border border-nda-primary/20 bg-white hover:bg-nda-soft px-3 py-2 text-sm font-medium">Sí, soy cliente</button>
+          <button type="button" onclick="setNdaClient(false)" id="nda-no" class="rounded-xl border border-nda-primary bg-nda-primary text-white px-3 py-2 text-sm font-medium">No, todavía no</button>
+        </div>
+      </div>
+      <div id="nda-plate" class="hidden">
+        <label class="block text-sm font-medium text-nda-dark mb-1">Patente del auto asegurado</label>
+        <input class="input uppercase" placeholder="AB123CD" maxlength="20" />
+        <p class="mt-1 text-xs text-nda-dark/60">La validamos contra tu póliza. Si no tenés seguro de auto, escribí la matrícula o número de póliza.</p>
+      </div>
+    </div>
+
+    <label class="flex items-start gap-3 text-sm text-nda-dark/80">
+      <input type="checkbox" required class="mt-1" />
+      <span>Acepto recibir comunicaciones de NDA Asesores y el tratamiento de mis datos según la política de privacidad.</span>
+    </label>
+    <button type="submit" class="btn-primary w-full">Crear cuenta y jugar</button>
+    <p class="text-xs text-nda-dark/60 text-center">Te vamos a mandar un link al mail para confirmar tu cuenta.</p>
+  </form>
+</section>
+
+<!-- ============ VISTA: JUGAR ============ -->
+<section id="jugar" class="view max-w-3xl mx-auto px-4 py-6 hidden">
+  <h1 class="text-2xl font-extrabold text-nda-dark mb-1">Tus pronósticos</h1>
+  <p class="text-sm text-nda-dark/70 mb-6">
+    Cargá tus resultados antes de cada partido. Hasta 5 minutos antes del kickoff podés modificarlos.
+  </p>
+
+  <!-- Caja de referidos -->
+  <div class="rounded-2xl bg-gradient-to-br from-nda-primary to-nda-dark text-white p-5 shadow-sm mb-6 relative overflow-hidden">
+    <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-nda-accent/20 blur-2xl"></div>
+    <div class="relative">
+      <p class="text-xs uppercase tracking-wider opacity-80">Tu link de invitación</p>
+      <p class="mt-1 font-bold text-lg break-all">prode.ndasesores.com.ar/r/JK7M2X</p>
+      <p class="text-sm opacity-90 mt-2">
+        Cada amigo que se registre con tu link y juegue al menos un pronóstico te suma <strong>+2 puntos</strong>, hasta 10 amigos (máx. 20 pts). Si invitás más, vas por el <strong>premio Embajador</strong>.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button class="bg-white/15 hover:bg-white/25 rounded-xl px-4 py-2 text-sm font-medium">Copiar link</button>
+        <button class="bg-nda-accent text-nda-dark rounded-xl px-4 py-2 text-sm font-bold">Compartir por WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex gap-2 border-b border-nda-primary/10 mb-4">
+    <button onclick="setTab('upcoming')" id="tab-upcoming" class="tab px-4 py-2 text-sm font-medium border-b-2 border-nda-primary text-nda-primary">Próximos</button>
+    <button onclick="setTab('live')" id="tab-live" class="tab px-4 py-2 text-sm font-medium border-b-2 border-transparent text-nda-dark/60 hover:text-nda-dark">En vivo</button>
+    <button onclick="setTab('finished')" id="tab-finished" class="tab px-4 py-2 text-sm font-medium border-b-2 border-transparent text-nda-dark/60 hover:text-nda-dark">Terminados</button>
+  </div>
+
+  <!-- Próximos -->
+  <div id="pane-upcoming" class="space-y-3">
+    <div class="card">
+      <div class="flex items-center justify-between text-xs text-nda-dark/60 mb-3">
+        <span>Fase de grupos · Grupo C</span>
+        <span>jue 11 jun · 17:00</span>
+      </div>
+      <div class="flex items-center justify-between gap-3">
+        <p class="flex-1 font-semibold text-nda-dark text-base">🇦🇷 Argentina</p>
+        <div class="flex items-center gap-2">
+          <input type="number" min="0" max="20" value="2" class="w-14 h-12 rounded-xl border border-nda-primary/20 text-center text-lg font-bold bg-white" />
+          <span class="text-nda-dark/40">vs</span>
+          <input type="number" min="0" max="20" value="0" class="w-14 h-12 rounded-xl border border-nda-primary/20 text-center text-lg font-bold bg-white" />
+        </div>
+        <p class="flex-1 text-right font-semibold text-nda-dark text-base">🇭🇷 Croacia</p>
+      </div>
+      <div class="mt-4 flex items-center justify-between">
+        <span class="text-xs text-nda-dark/60">Cierra 5 min antes del kickoff</span>
+        <button onclick="this.innerText='Guardado ✓'" class="btn-primary !py-2 !px-4 text-sm">Guardar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center justify-between text-xs text-nda-dark/60 mb-3">
+        <span>Fase de grupos · Grupo A</span>
+        <span>vie 12 jun · 21:00</span>
+      </div>
+      <div class="flex items-center justify-between gap-3">
+        <p class="flex-1 font-semibold text-nda-dark text-base">🇲🇽 México</p>
+        <div class="flex items-center gap-2">
+          <input type="number" min="0" max="20" value="1" class="w-14 h-12 rounded-xl border border-nda-primary/20 text-center text-lg font-bold bg-white" />
+          <span class="text-nda-dark/40">vs</span>
+          <input type="number" min="0" max="20" value="1" class="w-14 h-12 rounded-xl border border-nda-primary/20 text-center text-lg font-bold bg-white" />
+        </div>
+        <p class="flex-1 text-right font-semibold text-nda-dark text-base">🇺🇸 USA</p>
+      </div>
+      <div class="mt-4 flex items-center justify-between">
+        <span class="text-xs text-nda-dark/60">Cierra 5 min antes del kickoff</span>
+        <button onclick="this.innerText='Actualizar'" class="btn-primary !py-2 !px-4 text-sm">Actualizar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- En vivo -->
+  <div id="pane-live" class="space-y-3 hidden">
+    <div class="card border-l-4 border-l-nda-accent glow-cyan">
+      <div class="flex items-center justify-between text-xs mb-3">
+        <span class="text-nda-dark/60">Fase de grupos · Grupo D</span>
+        <span class="chip bg-nda-accent/20 text-nda-primary">
+          <span class="inline-block w-2 h-2 rounded-full bg-nda-accent animate-pulse"></span> En vivo · 73'
+        </span>
+      </div>
+      <div class="flex items-center justify-between gap-3">
+        <p class="flex-1 font-semibold text-nda-dark text-base">🇫🇷 Francia</p>
+        <div class="flex items-center gap-2">
+          <span class="w-14 h-12 grid place-items-center text-2xl font-extrabold text-nda-primary">2</span>
+          <span class="text-nda-dark/40">–</span>
+          <span class="w-14 h-12 grid place-items-center text-2xl font-extrabold text-nda-primary">1</span>
+        </div>
+        <p class="flex-1 text-right font-semibold text-nda-dark text-base">🇩🇪 Alemania</p>
+      </div>
+      <div class="mt-3 text-sm text-nda-dark/70 flex justify-between items-center">
+        <span>Tu pronóstico: <strong>2 – 1</strong></span>
+        <span class="text-nda-primary font-bold">¡Vas con el resultado exacto!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terminados -->
+  <div id="pane-finished" class="space-y-3 hidden">
+    <div class="card">
+      <div class="flex items-center justify-between text-xs text-nda-dark/60 mb-3">
+        <span>Fase de grupos · Grupo C</span>
+        <span>mar 9 jun</span>
+      </div>
+      <div class="flex items-center justify-between gap-3">
+        <p class="flex-1 font-semibold text-nda-dark text-base">🇦🇷 Argentina</p>
+        <div class="flex items-center gap-2">
+          <span class="w-14 h-12 grid place-items-center text-lg font-bold text-nda-dark/60 border border-nda-primary/20 rounded-xl bg-nda-soft">3</span>
+          <span class="text-nda-dark/40">–</span>
+          <span class="w-14 h-12 grid place-items-center text-lg font-bold text-nda-dark/60 border border-nda-primary/20 rounded-xl bg-nda-soft">2</span>
+        </div>
+        <p class="flex-1 text-right font-semibold text-nda-dark text-base">🇸🇦 Arabia Saudita</p>
+      </div>
+      <div class="mt-3 flex items-center justify-between text-sm">
+        <span class="text-nda-dark/70">Resultado real: <strong>3 – 2</strong></span>
+        <span class="font-semibold text-nda-primary">5 pts</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VISTA: RANKING ============ -->
+<section id="ranking" class="view max-w-3xl mx-auto px-4 py-6 hidden">
+  <h1 class="text-2xl font-extrabold text-nda-dark mb-1">Tabla de posiciones</h1>
+  <p class="text-sm text-nda-dark/70 mb-6">Top 200. Se actualiza después de cada partido.</p>
+
+  <div class="card !p-0 overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-nda-soft text-nda-dark/70 text-xs uppercase tracking-wider">
+        <tr>
+          <th class="text-left px-4 py-3 w-12">#</th>
+          <th class="text-left px-4 py-3">Jugador</th>
+          <th class="text-right px-4 py-3">Pts</th>
+          <th class="text-right px-4 py-3 hidden sm:table-cell">Exactos</th>
+          <th class="text-right px-4 py-3 hidden sm:table-cell">Refs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-t border-nda-primary/10 bg-nda-accent/10">
+          <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-nda-accent text-nda-dark">🏆</span></td>
+          <td class="px-4 py-3 text-nda-dark">Carlos Méndez</td>
+          <td class="px-4 py-3 text-right text-nda-primary font-bold">87</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">4</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">8</td>
+        </tr>
+        <tr class="border-t border-nda-primary/10 bg-nda-success/10">
+          <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-nda-success text-nda-dark">🥈</span></td>
+          <td class="px-4 py-3 text-nda-dark">Lucía Romero</td>
+          <td class="px-4 py-3 text-right text-nda-primary font-bold">82</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">3</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">6</td>
+        </tr>
+        <tr class="border-t border-nda-primary/10 bg-nda-primary/5">
+          <td class="px-4 py-3"><span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-nda-primary/20 text-nda-primary">🥉</span></td>
+          <td class="px-4 py-3 text-nda-dark">Martín Soriano</td>
+          <td class="px-4 py-3 text-right text-nda-primary font-bold">76</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">3</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">4</td>
+        </tr>
+        <tr class="border-t border-nda-primary/10 bg-nda-accent/15 font-semibold">
+          <td class="px-4 py-3 text-nda-dark/60">4</td>
+          <td class="px-4 py-3 text-nda-dark">Franco Piazze <span class="text-xs text-nda-primary">(vos)</span></td>
+          <td class="px-4 py-3 text-right text-nda-primary font-bold">71</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">2</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">3</td>
+        </tr>
+        <tr class="border-t border-nda-primary/10">
+          <td class="px-4 py-3 text-nda-dark/60">5</td>
+          <td class="px-4 py-3 text-nda-dark">Ana Pérez</td>
+          <td class="px-4 py-3 text-right text-nda-primary font-bold">68</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">2</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">2</td>
+        </tr>
+        <tr class="border-t border-nda-primary/10">
+          <td class="px-4 py-3 text-nda-dark/60">6</td>
+          <td class="px-4 py-3 text-nda-dark">Diego Fernández</td>
+          <td class="px-4 py-3 text-right text-nda-primary font-bold">64</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">2</td>
+          <td class="px-4 py-3 text-right hidden sm:table-cell text-nda-dark/70">1</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ VISTA: PERFIL ============ -->
+<section id="perfil" class="view max-w-2xl mx-auto px-4 py-6 hidden space-y-6">
+  <h1 class="text-2xl font-extrabold text-nda-dark">Tu perfil</h1>
+
+  <div class="rounded-2xl bg-gradient-to-br from-nda-primary to-nda-dark text-white p-5 shadow-sm relative overflow-hidden">
+    <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-nda-accent/20 blur-2xl"></div>
+    <div class="relative">
+      <p class="text-xs uppercase tracking-wider opacity-80">Tu link de invitación</p>
+      <p class="mt-1 font-bold text-lg break-all">prode.ndasesores.com.ar/r/JK7M2X</p>
+      <p class="text-sm opacity-90 mt-2">Cada amigo que se registre con tu link y juegue al menos un pronóstico te suma <strong>+2 puntos</strong>, hasta 10 amigos (máx. 20 pts). Si invitás más, vas por el <strong>premio Embajador</strong>.</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button class="bg-white/15 hover:bg-white/25 rounded-xl px-4 py-2 text-sm font-medium">Copiar link</button>
+        <button class="bg-nda-accent text-nda-dark rounded-xl px-4 py-2 text-sm font-bold">Compartir por WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="text-sm text-nda-dark/70">Amigos confirmados</p>
+    <p class="text-3xl font-bold text-nda-primary">3</p>
+    <p class="text-xs text-nda-dark/60 mt-1">Cada uno te suma 2 puntos al ranking principal, hasta 10 amigos (máx. 20 pts). Si pasás los 10, los extra cuentan para el ranking Embajadores.</p>
+  </div>
+
+  <div class="card border-2 border-nda-accent">
+    <p class="text-sm text-nda-dark/70">Bonus asegurado NDA</p>
+    <p class="text-3xl font-bold text-nda-primary">+20 pts</p>
+    <p class="text-xs text-nda-dark/60 mt-1">¡Validado! Ya tenés tus puntos de ventaja sumados al ranking.</p>
+  </div>
+
+  <form class="card space-y-4">
+    <h2 class="font-bold text-nda-dark">Tus datos</h2>
+    <div>
+      <label class="block text-sm font-medium text-nda-dark mb-1">Nombre y apellido</label>
+      <input class="input" value="Franco Piazze" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-nda-dark mb-1">WhatsApp</label>
+      <input class="input" value="+54 11 5555-1234" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-nda-dark mb-1">Provincia</label>
+      <select class="input"><option>Buenos Aires</option></select>
+    </div>
+    <div class="flex items-center gap-3">
+      <button type="button" class="btn-primary">Guardar cambios</button>
+      <button type="button" class="btn-ghost">Cerrar sesión</button>
+    </div>
+  </form>
+</section>
+
+<script>
+  function show(id) {
+    document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+  function setTab(t) {
+    ["upcoming","live","finished"].forEach(k => {
+      const tab = document.getElementById("tab-"+k);
+      const pane = document.getElementById("pane-"+k);
+      if (k === t) {
+        tab.classList.add("border-nda-primary","text-nda-primary");
+        tab.classList.remove("border-transparent","text-nda-dark/60");
+        pane.classList.remove("hidden");
+      } else {
+        tab.classList.remove("border-nda-primary","text-nda-primary");
+        tab.classList.add("border-transparent","text-nda-dark/60");
+        pane.classList.add("hidden");
+      }
+    });
+  }
+  function setNdaClient(isClient) {
+    const yes = document.getElementById("nda-yes");
+    const no = document.getElementById("nda-no");
+    const plate = document.getElementById("nda-plate");
+    const activeCls = ["border-nda-primary","bg-nda-primary","text-white"];
+    const inactiveCls = ["border-nda-primary/20","bg-white","hover:bg-nda-soft"];
+    if (isClient) {
+      activeCls.forEach(c => yes.classList.add(c));
+      inactiveCls.forEach(c => yes.classList.remove(c));
+      activeCls.forEach(c => no.classList.remove(c));
+      inactiveCls.forEach(c => no.classList.add(c));
+      plate.classList.remove("hidden");
+    } else {
+      activeCls.forEach(c => yes.classList.remove(c));
+      inactiveCls.forEach(c => yes.classList.add(c));
+      activeCls.forEach(c => no.classList.add(c));
+      inactiveCls.forEach(c => no.classList.remove(c));
+      plate.classList.add("hidden");
+    }
+  }
+</script>
+
+</body>
+</html>
