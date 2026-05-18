@@ -110,9 +110,13 @@ function RegistroContent() {
     }
 
     // 2. Crear el perfil en nuestra tabla via API route (necesita service_role)
+    const accessToken = signUpData.session?.access_token;
     const res = await fetch("/api/create-profile", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(accessToken ? { "Authorization": `Bearer ${accessToken}` } : {}),
+      },
       body: JSON.stringify({
         full_name: form.full_name.trim(),
         phone: form.phone.trim() || null,

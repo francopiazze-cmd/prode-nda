@@ -3,8 +3,21 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { sendWelcomeEmail } from "@/lib/mail";
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const admin = createAdminClient();
+
+  // Intentar obtener el usuario por token Bearer (registro nuevo) o por cookie (sesión existente)
+  let user = null;
+  const authHeader = req.headers.get("Authorization");
+  if (authHeader?.startsWith("Bearer ")) {
+    const token = authHeader.replace("Bearer ", "");
+    const { data } = await admin.auth.getUser(token);
+    user = data.user;
+  }
+  if (!user) {
+    const supabase = createClient();
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  }
 
   if (!user) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
@@ -19,8 +32,6 @@ export async function POST(req: NextRequest) {
     nda_license_plate: string | null;
     referral_code: string | null;
   };
-
-  const admin = createAdminClient();
 
   // Verificar que el perfil no exista ya
   const { data: existing } = await admin
