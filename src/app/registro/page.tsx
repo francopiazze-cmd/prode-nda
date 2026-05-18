@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -8,6 +8,10 @@ import { createClient } from "@/lib/supabase/client";
 import { ARGENTINE_PROVINCES, INSURANCE_TYPES } from "@/lib/supabase/types";
 
 export default function RegistroPage() {
+  return <Suspense><RegistroContent /></Suspense>;
+}
+
+function RegistroContent() {
   const router = useRouter();
   const search = useSearchParams();
   const ref = search.get("ref");
