@@ -1,16 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 
-const ADMIN_EMAIL = "francopiazze@gmail.com";
+const ADMIN_EMAILS = [
+  "francopiazze@gmail.com",
+  "capraromauro@hotmail.com",
+];
 
 export async function POST(req: NextRequest) {
-  // Verificar que quien llama es el admin
+  // Verificar que quien llama es admin
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user || user.email !== ADMIN_EMAIL) {
+  if (!user || !user.email || !ADMIN_EMAILS.includes(user.email)) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 

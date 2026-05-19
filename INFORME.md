@@ -229,12 +229,16 @@ Hay dos procesos automáticos (cron jobs) en Vercel:
 
 ### Cómo validás un cliente NDA (+20 puntos)
 
-1. Entrás a `https://prode.ndasesores.com.ar/admin` (logueado con `francopiazze@gmail.com`)
+1. Entrás a `https://prode.ndasesores.com.ar/admin` logueado con alguna de estas cuentas autorizadas:
+   - `francopiazze@gmail.com` (Franco)
+   - `capraromauro@hotmail.com` (Mauro)
 2. Ves la lista de personas que marcaron "Soy cliente NDA" con su patente
 3. Verificás contra tu sistema interno que efectivamente tiene póliza
 4. Click en **"Validar ✓"** → se le suman 20 puntos al ranking automáticamente
 
 Si entra cualquier otro usuario a `/admin`, lo redirige a `/jugar` sin mostrar nada.
+
+**Para agregar/quitar admins:** decime el mail y lo cambio en 30 segundos (se actualiza en dos archivos del código).
 
 ---
 
@@ -385,7 +389,7 @@ vercel.json                 → Configuración de Vercel (cron jobs)
 | Cron jobs diarios (no en tiempo real) | Limitación del plan gratis de Vercel |
 | Pato (mascota) en hero y premios | Identidad visual única, transmite cercanía |
 | Validación manual de clientes NDA | Control humano, evita falsos positivos |
-| Email del admin hardcodeado | Más simple que sistema de roles |
+| Emails de admin hardcodeados (lista en código) | Más simple que sistema de roles. Para agregar/quitar admins, modificar el array `ADMIN_EMAILS` en `src/app/admin/page.tsx` y `src/app/api/admin/validate-client/route.ts` |
 
 ---
 

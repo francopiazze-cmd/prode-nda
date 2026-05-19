@@ -2,7 +2,10 @@ import { redirect } from "next/navigation";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { AdminClient } from "./AdminClient";
 
-const ADMIN_EMAIL = "francopiazze@gmail.com";
+const ADMIN_EMAILS = [
+  "francopiazze@gmail.com",
+  "capraromauro@hotmail.com",
+];
 
 export default async function AdminPage() {
   const supabase = createClient();
@@ -10,7 +13,7 @@ export default async function AdminPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user || user.email !== ADMIN_EMAIL) {
+  if (!user || !user.email || !ADMIN_EMAILS.includes(user.email)) {
     redirect("/jugar");
   }
 
