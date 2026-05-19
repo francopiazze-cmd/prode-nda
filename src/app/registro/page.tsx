@@ -80,7 +80,9 @@ function RegistroContent() {
       return;
     }
     if (form.is_nda_client && !form.nda_license_plate.trim()) {
-      setError("Cargá la patente del auto asegurado para que podamos validar tu bonus.");
+      setError(
+        "Cargá la patente del auto o nº de póliza. Si no tenés auto, indicá qué seguro tenés contratado (Hogar, Comercio, ART, Accidentes Personales, etc.) para que podamos validar tu bonus."
+      );
       return;
     }
 
@@ -307,15 +309,15 @@ function RegistroContent() {
 
           {form.is_nda_client === true && (
             <Field
-              label="Patente del auto asegurado"
-              hint="Si no tenés seguro de auto, escribí el número de póliza."
+              label="Patente, nº de póliza o tipo de seguro"
+              hint="Si tenés auto: cargá la patente. Si no, el nº de póliza o el seguro que tenés (ej: Hogar, Comercio, ART, Accidentes Personales)."
             >
               <input
                 className="input uppercase"
                 value={form.nda_license_plate}
                 onChange={(e) => setForm({ ...form, nda_license_plate: e.target.value })}
-                placeholder="AB123CD"
-                maxLength={20}
+                placeholder="AB123CD / Hogar / 64/006475"
+                maxLength={60}
               />
             </Field>
           )}
