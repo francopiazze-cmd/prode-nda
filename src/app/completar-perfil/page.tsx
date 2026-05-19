@@ -139,8 +139,9 @@ export default function CompletarPerfilPage() {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Field label="WhatsApp" hint="Solo para avisos del prode.">
+            <Field label="WhatsApp" hint="Solo para avisos del prode." required>
               <input
+                required
                 type="tel"
                 autoComplete="tel"
                 className="input"

@@ -220,6 +220,7 @@ function RegistroContent() {
 
         <Field label="WhatsApp" hint="Solo para avisos del prode. Nunca llamamos sin avisar.">
           <input
+            required
             type="tel"
             autoComplete="tel"
             className="input"
