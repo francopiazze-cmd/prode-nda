@@ -10,7 +10,7 @@ export default async function Image() {
     process.env.NEXT_PUBLIC_APP_URL || "https://prode.ndasesores.com.ar";
 
   const [patoSrc, logoSrc] = await Promise.all([
-    fetch(`${appUrl}/pato-pelota.png`).then((r) => r.arrayBuffer()),
+    fetch(`${appUrl}/pato-festejo-sin-fondo.png`).then((r) => r.arrayBuffer()),
     fetch(`${appUrl}/nda-monogram-light.png`).then((r) => r.arrayBuffer()),
   ]);
 
