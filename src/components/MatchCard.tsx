@@ -277,13 +277,30 @@ export function MatchCard({ match, prediction, onSave }: Props) {
       </div>
 
       {finished && (
-        <div className="mt-3 flex items-center justify-between text-sm">
-          <span className="text-nda-dark/70">
-            Resultado real: <strong>{match.home_score} – {match.away_score}</strong>
-          </span>
-          <span className={`font-semibold ${points && points > 0 ? "text-nda-primary" : "text-nda-dark/50"}`}>
-            {points !== null ? `${points} pts` : "—"}
-          </span>
+        <div className="mt-3 space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-nda-dark/70">
+              Resultado real: <strong>{match.home_score} – {match.away_score}</strong>
+            </span>
+            <span className={`font-semibold ${points && points > 0 ? "text-nda-primary" : "text-nda-dark/50"}`}>
+              {points !== null ? `${points} pts` : "—"}
+            </span>
+          </div>
+          {prediction && points !== null && (() => {
+            const label = getResultLabel(
+              prediction.home_score,
+              prediction.away_score,
+              match.home_score ?? 0,
+              match.away_score ?? 0
+            );
+            return (
+              <div
+                className={`rounded-lg px-3 py-2 text-sm font-semibold text-center ${label.style}`}
+              >
+                {label.emoji} {label.text}
+              </div>
+            );
+          })()}
         </div>
       )}
 
@@ -345,6 +362,50 @@ function ScoreInput({
       className="w-14 h-12 rounded-xl border border-nda-primary/20 text-center text-lg font-bold text-nda-dark bg-white focus:border-nda-primary focus:outline-none focus:ring-2 focus:ring-nda-primary/20 disabled:bg-nda-soft disabled:text-nda-dark/60 placeholder:text-nda-dark/30 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
     />
   );
+}
+
+/** Devuelve el label visual según el tipo de acierto */
+function getResultLabel(
+  predH: number,
+  predA: number,
+  realH: number,
+  realA: number
+): { emoji: string; text: string; style: string } {
+  // Resultado exacto
+  if (predH === realH && predA === realA) {
+    return {
+      emoji: "🎯",
+      text: "¡Resultado exacto!",
+      style: "bg-nda-success/20 text-nda-dark border border-nda-success/40",
+    };
+  }
+
+  const predWinner = Math.sign(predH - predA);
+  const realWinner = Math.sign(realH - realA);
+
+  if (predWinner === realWinner) {
+    // Acertó diferencia de goles
+    if (predH - predA === realH - realA) {
+      return {
+        emoji: "👌",
+        text: "Acertaste la diferencia",
+        style: "bg-nda-accent/20 text-nda-primary border border-nda-accent/40",
+      };
+    }
+    // Solo acertó ganador
+    return {
+      emoji: "✓",
+      text: "Acertaste el ganador",
+      style: "bg-nda-primary/10 text-nda-primary border border-nda-primary/20",
+    };
+  }
+
+  // No acertó nada
+  return {
+    emoji: "✗",
+    text: "Erraste este partido",
+    style: "bg-nda-dark/5 text-nda-dark/50 border border-nda-dark/10",
+  };
 }
 
 function stageLabel(stage: string): string {
