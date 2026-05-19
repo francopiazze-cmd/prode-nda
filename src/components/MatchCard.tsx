@@ -216,8 +216,8 @@ export function MatchCard({ match, prediction, onSave }: Props) {
         )}
       </div>
 
-      <div className="flex items-center justify-between gap-3">
-        <TeamSlot name={match.home_team_name ?? "—"} />
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+        <TeamSlot name={match.home_team_name ?? "—"} align="left" />
 
         <div className="flex items-center gap-2">
           <ScoreInput
@@ -225,7 +225,7 @@ export function MatchCard({ match, prediction, onSave }: Props) {
             onChange={setHome}
             disabled={locked}
           />
-          <span className="text-nda-dark/40">vs</span>
+          <span className="text-nda-dark/40 text-xs font-medium">vs</span>
           <ScoreInput
             value={away}
             onChange={setAway}
@@ -265,12 +265,13 @@ export function MatchCard({ match, prediction, onSave }: Props) {
 
 function TeamSlot({ name, align = "left" }: { name: string; align?: "left" | "right" }) {
   const team = TEAM_MAP[name] ?? { es: name, flag: "🏳️" };
+  const isRight = align === "right";
   return (
-    <div className={`flex-1 ${align === "right" ? "text-right" : ""}`}>
-      <p className={`font-semibold text-nda-dark text-sm sm:text-base flex items-center gap-1.5 ${align === "right" ? "justify-end flex-row-reverse" : ""}`}>
-        <span className="text-lg leading-none">{team.flag}</span>
-        <span>{team.es}</span>
-      </p>
+    <div className={`flex items-center gap-1.5 ${isRight ? "flex-row-reverse justify-start" : "justify-start"}`}>
+      <span className="text-xl leading-none shrink-0">{team.flag}</span>
+      <span className={`font-semibold text-nda-dark text-sm sm:text-base ${isRight ? "text-right" : "text-left"}`}>
+        {team.es}
+      </span>
     </div>
   );
 }
@@ -295,7 +296,7 @@ function ScoreInput({
         const n = Number(e.target.value);
         if (Number.isFinite(n) && n >= 0 && n <= 20) onChange(n);
       }}
-      className="w-14 h-12 rounded-xl border border-nda-primary/20 text-center text-lg font-bold text-nda-dark bg-white focus:border-nda-primary focus:outline-none focus:ring-2 focus:ring-nda-primary/20 disabled:bg-nda-soft disabled:text-nda-dark/60"
+      className="w-14 h-12 rounded-xl border border-nda-primary/20 text-center text-lg font-bold text-nda-dark bg-white focus:border-nda-primary focus:outline-none focus:ring-2 focus:ring-nda-primary/20 disabled:bg-nda-soft disabled:text-nda-dark/60 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
     />
   );
 }
