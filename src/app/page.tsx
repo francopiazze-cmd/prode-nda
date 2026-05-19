@@ -34,8 +34,19 @@ export default async function HomePage() {
               <Link href="/login" className="btn-ghost-light text-base">Ya tengo cuenta</Link>
             </div>
             <p className="mt-3 text-xs text-white/60">Tarda menos de 1 minuto registrarse · 100% gratis</p>
+            {/* Pato mobile — solo se ve en pantallas chicas */}
+            <div className="flex sm:hidden justify-center mt-6">
+              <Image
+                src="/pato-pie-sin-fondo.png"
+                alt="Mascota NDA Prode"
+                width={180}
+                height={260}
+                className="object-contain drop-shadow-2xl"
+                priority
+              />
+            </div>
           </div>
-          {/* Pato hero — solo desktop */}
+          {/* Pato desktop */}
           <div className="hidden sm:flex shrink-0 h-[420px] items-end">
             <Image
               src="/pato-pie-sin-fondo.png"
