@@ -17,8 +17,14 @@ export const metadata: Metadata = {
     description:
       "Jugá gratis y ganá una Smart TV. Invitá amigos y sumá puntos extra. Cortesía de NDA Asesores.",
     type: "website",
-    locale: "es_AR",
-    images: ["/nda-logo-on-blue.png"]
+    locale: "es_AR"
+    // La imagen la genera dinámicamente src/app/opengraph-image.tsx
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Prode NDA — Mundial 2026",
+    description:
+      "Jugá gratis y ganá una Smart TV. Invitá amigos y sumá puntos extra."
   }
 };
 
