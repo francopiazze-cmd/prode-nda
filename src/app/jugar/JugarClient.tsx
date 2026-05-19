@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MatchCard } from "@/components/MatchCard";
 import { ReferralBox } from "@/components/ReferralBox";
 import { createClient } from "@/lib/supabase/client";
@@ -31,14 +31,80 @@ const KNOCKOUT_ORDER: MatchStage[] = [
   "FINAL",
 ];
 
+/**
+ * Devuelve la etapa activa del torneo en este momento:
+ * 1. Partido en vivo → su etapa
+ * 2. Próximo partido por jugarse → su etapa
+ * 3. Último partido jugado → su etapa
+ * 4. Default: GROUP_STAGE
+ */
+function getActiveStage(matches: Match[]): MatchStage {
+  const live = matches.find(
+    (m) => m.status === "LIVE" || m.status === "IN_PLAY"
+  );
+  if (live) return live.stage;
+
+  const upcoming = [...matches]
+    .filter((m) => m.status !== "FINISHED" && m.status !== "AWARDED")
+    .sort(
+      (a, b) =>
+        new Date(a.utc_kickoff).getTime() - new Date(b.utc_kickoff).getTime()
+    );
+  if (upcoming.length > 0) return upcoming[0].stage;
+
+  const finished = [...matches]
+    .filter((m) => m.status === "FINISHED" || m.status === "AWARDED")
+    .sort(
+      (a, b) =>
+        new Date(b.utc_kickoff).getTime() - new Date(a.utc_kickoff).getTime()
+    );
+  if (finished.length > 0) return finished[0].stage;
+
+  return "GROUP_STAGE";
+}
+
+/**
+ * Devuelve el grupo más relevante para mostrar:
+ * el grupo del próximo partido de grupos sin jugar,
+ * o el primer grupo disponible.
+ */
+function getDefaultGroup(matches: Match[]): string | null {
+  const upcoming = [...matches]
+    .filter(
+      (m) =>
+        m.stage === "GROUP_STAGE" &&
+        m.status !== "FINISHED" &&
+        m.status !== "AWARDED" &&
+        m.group_letter
+    )
+    .sort(
+      (a, b) =>
+        new Date(a.utc_kickoff).getTime() - new Date(b.utc_kickoff).getTime()
+    );
+  if (upcoming.length > 0) return upcoming[0].group_letter!;
+
+  const letters = matches
+    .filter((m) => m.stage === "GROUP_STAGE" && m.group_letter)
+    .map((m) => m.group_letter as string);
+  return [...new Set(letters)].sort()[0] ?? null;
+}
+
 export function JugarClient({ matches, predictions, referralCode }: Props) {
   const supabase = createClient();
   const [localPreds, setLocalPreds] = useState<Record<number, Prediction>>(() =>
     Object.fromEntries(predictions.map((p) => [p.match_id, p]))
   );
-  const [mainTab, setMainTab] = useState<MainTab>("grupos");
-  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
-  const [selectedStage, setSelectedStage] = useState<MatchStage | null>(null);
+  const [mainTab, setMainTab] = useState<MainTab>(() => {
+    const stage = getActiveStage(matches);
+    return stage === "GROUP_STAGE" ? "grupos" : "eliminatorias";
+  });
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(() =>
+    getDefaultGroup(matches)
+  );
+  const [selectedStage, setSelectedStage] = useState<MatchStage | null>(() => {
+    const stage = getActiveStage(matches);
+    return stage !== "GROUP_STAGE" ? stage : null;
+  });
 
   // Obtener grupos disponibles en orden
   const groups = useMemo(() => {
@@ -57,15 +123,19 @@ export function JugarClient({ matches, predictions, referralCode }: Props) {
     return KNOCKOUT_ORDER.filter((s) => unique.includes(s));
   }, [matches]);
 
-  // Auto-seleccionar el primer grupo/fase disponible
-  useMemo(() => {
+  // Fallback: si el usuario cambia de tab y el estado es null, auto-seleccionar
+  useEffect(() => {
     if (mainTab === "grupos" && !selectedGroup && groups.length > 0) {
       setSelectedGroup(groups[0]);
     }
     if (mainTab === "eliminatorias" && !selectedStage && knockoutStages.length > 0) {
-      setSelectedStage(knockoutStages[0]);
+      // Preferir la etapa activa del torneo si ya está en la lista
+      const active = getActiveStage(matches);
+      const best = knockoutStages.includes(active) ? active : knockoutStages[0];
+      setSelectedStage(best);
     }
-  }, [mainTab, groups, knockoutStages, selectedGroup, selectedStage]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mainTab]);
 
   // Partidos filtrados según la selección
   const filteredMatches = useMemo(() => {
