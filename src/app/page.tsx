@@ -16,23 +16,36 @@ export default async function HomePage() {
 
       {/* HERO */}
       <section className="hero-gradient text-white overflow-hidden relative">
-        <div className="max-w-3xl mx-auto px-4 pt-12 pb-16 sm:pt-20 sm:pb-24 text-center relative z-10">
-          <span className="chip bg-nda-accent/20 text-nda-accent border border-nda-accent/40">
-            <DotIcon /> Mundial 2026 · 11 jun → 19 jul
-          </span>
-          <h1 className="mt-5 text-4xl sm:text-6xl font-extrabold leading-tight tracking-tight">
-            Acertá lo inesperado.<br />
-            <span className="text-nda-accent">Ganá una Smart TV.</span>
-          </h1>
-          <p className="mt-5 text-lg sm:text-xl text-white/85 max-w-xl mx-auto">
-            El prode del Mundial 2026, cortesía de NDA Asesores. Predecí los resultados,
-            invitá amigos y competí por una Smart TV.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/registro" className="btn-accent text-base">Jugar gratis</Link>
-            <Link href="/login" className="btn-ghost-light text-base">Ya tengo cuenta</Link>
+        <div className="max-w-5xl mx-auto px-4 pt-12 pb-16 sm:pt-20 sm:pb-24 relative z-10 flex flex-col sm:flex-row items-center gap-8">
+          {/* Texto hero */}
+          <div className="flex-1 text-center sm:text-left">
+            <span className="chip bg-nda-accent/20 text-nda-accent border border-nda-accent/40">
+              <DotIcon /> Mundial 2026 · 11 jun → 19 jul
+            </span>
+            <h1 className="mt-5 text-4xl sm:text-6xl font-extrabold leading-tight tracking-tight">
+              Nosotros cubrimos lo inesperado.<br />
+              <span className="text-nda-accent">Vos predecilo.</span>
+            </h1>
+            <p className="mt-5 text-lg sm:text-xl text-white/85 max-w-xl mx-auto sm:mx-0">
+              104 partidos, 48 selecciones, un solo ganador. Jugá gratis por una Smart TV — cortesía de NDA Asesores.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center sm:justify-start">
+              <Link href="/registro" className="btn-accent text-base">Jugar gratis</Link>
+              <Link href="/login" className="btn-ghost-light text-base">Ya tengo cuenta</Link>
+            </div>
+            <p className="mt-3 text-xs text-white/60">Tarda menos de 1 minuto registrarse · 100% gratis</p>
           </div>
-          <p className="mt-3 text-xs text-white/60">Tarda menos de 1 minuto registrarse · 100% gratis</p>
+          {/* Pato hero — solo desktop */}
+          <div className="hidden sm:flex shrink-0 h-[420px] overflow-hidden items-end">
+            <Image
+              src="/pato-pie.png"
+              alt="Mascota NDA Prode"
+              width={280}
+              height={420}
+              className="object-contain object-bottom h-full w-auto"
+              priority
+            />
+          </div>
         </div>
       </section>
 
@@ -40,7 +53,7 @@ export default async function HomePage() {
         {/* CÓMO SUMÁS PUNTOS */}
         <section>
           <h2 className="text-center text-2xl sm:text-3xl font-extrabold text-nda-dark mb-2">¿Cómo se juega?</h2>
-          <p className="text-center text-nda-dark/70 mb-8">Más certero, más puntos. Más amigos, más chance.</p>
+          <p className="text-center text-nda-dark/70 mb-8">Más certero, más puntos. Más amigos, más ventaja.</p>
           <div className="grid sm:grid-cols-3 gap-4">
             <FeatureCard
               icon={<BallIcon />}
@@ -68,10 +81,10 @@ export default async function HomePage() {
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-nda-primary">Bonus para clientes</p>
-              <h3 className="font-extrabold text-xl text-nda-dark mt-1">¿Sos asegurado de NDA? Arrancás con +20 puntos</h3>
+              <h3 className="font-extrabold text-xl text-nda-dark mt-1">Clientes NDA: 20 puntos de ventaja desde el minuto cero.</h3>
               <p className="text-sm text-nda-dark/80 mt-2">
-                Si ya tenés una póliza con nosotros, cargá tu patente al registrarte y la validamos en hasta 48 hs. hábiles.
-                Una vez confirmada, sumás <strong>20 puntos de ventaja</strong> al ranking — todo por habilidad, no por sorteo.
+                Si tenés póliza con nosotros, cargá tu patente al registrarte. La validamos en 48 hs hábiles y arrancás el Mundial
+                con <strong>20 puntos en el bolsillo</strong> — equivalente a clavar 4 resultados exactos antes de que ruede la pelota.
               </p>
             </div>
           </div>
@@ -79,13 +92,33 @@ export default async function HomePage() {
 
         {/* PREMIOS */}
         <section>
-          <h2 className="text-center text-2xl sm:text-3xl font-extrabold text-nda-dark mb-8">Los premios</h2>
+          <div className="flex items-center justify-center gap-6 mb-8">
+            <h2 className="text-center text-2xl sm:text-3xl font-extrabold text-nda-dark">Los premios</h2>
+            {/* Pato festejo — solo desktop */}
+            <div className="hidden sm:block shrink-0">
+              <Image
+                src="/pato-festejo.png"
+                alt="Mascota NDA festejando"
+                width={120}
+                height={200}
+                className="object-contain h-[200px] w-auto"
+              />
+            </div>
+          </div>
           <div className="grid sm:grid-cols-2 gap-3">
             <PrizeCard place="1°" highlight icon={<TvIcon />} title="Smart TV 55″" desc="Modelo a confirmar" />
             <PrizeCard place="2°" icon={<CoffeeIcon />} title="Cafetera Nespresso" desc="Modelo a confirmar" />
             <PrizeCard place="3°" icon={<DishIcon />} title="Gift card cena" desc="Kansas Nordelta" />
-            <PrizeCard place="Embajador" icon={<MegaphoneIcon />} title="Premio aparte" desc="Para quien más amigos refiera (a partir del 11°)" />
+            <PrizeCard place="Embajador" icon={<MegaphoneIcon />} title="Premio aparte" desc="Premio aparte para quien más amigos sume al prode. Si convertís tu grupo de WhatsApp en jugadores, ganás aunque no aciertes un solo partido." />
           </div>
+        </section>
+
+        {/* ¿POR QUÉ EN NDA ARMAMOS ESTO? */}
+        <section className="card !p-8 text-center">
+          <h2 className="font-extrabold text-2xl sm:text-3xl text-nda-dark mb-4">¿Por qué en NDA armamos esto?</h2>
+          <p className="text-nda-dark/80 text-lg sm:text-xl max-w-xl mx-auto leading-relaxed">
+            Porque estar cuando pasa lo inesperado es nuestro trabajo todos los días. Durante el Mundial, lo hacemos un juego.
+          </p>
         </section>
 
         {/* CÓMO FUNCIONA */}
@@ -95,7 +128,7 @@ export default async function HomePage() {
             <StepItem n={1}>Te registrás con tu mail o Google (1 minuto).</StepItem>
             <StepItem n={2}>Cargás tu pronóstico antes de cada partido (cierra 5 min antes del kickoff).</StepItem>
             <StepItem n={3}>Compartís tu link de invitación por WhatsApp y sumás puntos por cada amigo que juega.</StepItem>
-            <StepItem n={4}>El que más puntos tenga al cierre del Mundial se lleva la TV.</StepItem>
+            <StepItem n={4}>Llegás al 19 de julio con más puntos que todos. La TV es tuya.</StepItem>
           </ol>
         </section>
 
