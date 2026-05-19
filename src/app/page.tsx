@@ -36,13 +36,13 @@ export default async function HomePage() {
             <p className="mt-3 text-xs text-white/60">Tarda menos de 1 minuto registrarse · 100% gratis</p>
           </div>
           {/* Pato hero — solo desktop */}
-          <div className="hidden sm:flex shrink-0 h-[420px] overflow-hidden items-end">
+          <div className="hidden sm:flex shrink-0 h-[420px] items-end">
             <Image
-              src="/pato-pie.png"
+              src="/pato-pie-sin-fondo.png"
               alt="Mascota NDA Prode"
               width={280}
               height={420}
-              className="object-contain object-bottom h-full w-auto"
+              className="object-contain object-bottom h-full w-auto drop-shadow-2xl"
               priority
             />
           </div>
@@ -97,7 +97,7 @@ export default async function HomePage() {
             {/* Pato festejo — solo desktop */}
             <div className="hidden sm:block shrink-0">
               <Image
-                src="/pato-festejo.png"
+                src="/pato-festejo-sin-fondo.png"
                 alt="Mascota NDA festejando"
                 width={120}
                 height={200}
