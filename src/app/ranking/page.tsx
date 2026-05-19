@@ -2,9 +2,9 @@ import { Header } from "@/components/Header";
 import { Leaderboard } from "@/components/Leaderboard";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import type { LeaderboardRow } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 30;
 
 export default async function RankingPage() {
   const supabase = createClient();
@@ -24,7 +24,7 @@ export default async function RankingPage() {
         <p className="text-sm text-nda-dark/70 mb-6">
           Top 200. Se actualiza después de cada partido.
         </p>
-        <Leaderboard rows={(rows as any) ?? []} currentUserId={user.id} />
+        <Leaderboard rows={(rows as LeaderboardRow[]) ?? []} currentUserId={user.id} />
       </main>
     </>
   );

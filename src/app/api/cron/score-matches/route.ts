@@ -72,7 +72,8 @@ async function handle(req: NextRequest) {
         .eq("id", fd.id);
 
       // Si recién pasó a FINISHED, calcular puntos
-      const wasUnscored = local && local.status !== "FINISHED";
+      // (!local) cubre el caso donde sync-fixtures no corrió todavía
+      const wasUnscored = !local || local.status !== "FINISHED";
       if (newStatus === "FINISHED" && wasUnscored && fd.score.fullTime.home != null && fd.score.fullTime.away != null) {
         const updated = await scoreAllPredictionsForMatch(admin, fd, newStage);
         updatedPredictions += updated;

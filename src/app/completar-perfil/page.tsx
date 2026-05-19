@@ -15,7 +15,6 @@ export default function CompletarPerfilPage() {
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string>("");
-  const [userReferralCode, setUserReferralCode] = useState<string>("");
 
   const [form, setForm] = useState({
     phone: "",
@@ -35,7 +34,7 @@ export default function CompletarPerfilPage() {
       // Verificar si ya completó el perfil
       const { data: profile } = await supabase
         .from("profiles")
-        .select("phone, referral_code")
+        .select("phone")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -46,7 +45,6 @@ export default function CompletarPerfilPage() {
 
       setUserId(user.id);
       setUserEmail(user.email ?? "");
-      setUserReferralCode(profile?.referral_code ?? "");
       setLoading(false);
     });
   }, [router, supabase]);

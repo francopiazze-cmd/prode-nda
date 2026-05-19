@@ -14,6 +14,7 @@ export function PerfilForm({ profile }: { profile: Profile }) {
   });
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   function toggleInsurance(id: string) {
     setForm((f) => ({
@@ -27,10 +28,15 @@ export function PerfilForm({ profile }: { profile: Profile }) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-    await supabase.from("profiles").update(form).eq("id", profile.id);
+    setSaveError(null);
+    const { error } = await supabase.from("profiles").update(form).eq("id", profile.id);
     setSaving(false);
-    setSavedAt(Date.now());
-    setTimeout(() => setSavedAt(null), 2000);
+    if (error) {
+      setSaveError("No se pudo guardar. Intentá de nuevo.");
+    } else {
+      setSavedAt(Date.now());
+      setTimeout(() => setSavedAt(null), 2000);
+    }
   }
 
   async function handleLogout() {
@@ -106,6 +112,7 @@ export function PerfilForm({ profile }: { profile: Profile }) {
           Cerrar sesión
         </button>
       </div>
+      {saveError && <p className="text-sm text-red-600">{saveError}</p>}
     </form>
   );
 }
