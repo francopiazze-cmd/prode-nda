@@ -33,6 +33,13 @@ function RegistroContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Cada vez que cambia el error, scroll hacia arriba para que se vea
+  useEffect(() => {
+    if (error && typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [error]);
+
   useEffect(() => {
     if (!ref) return;
     supabase
@@ -145,6 +152,16 @@ function RegistroContent() {
       {referrerName && (
         <div className="mb-6 rounded-xl bg-nda-accent/20 border border-nda-accent/40 px-4 py-3 text-sm">
           Te invitó <strong>{referrerName}</strong>. Cuando hagas tu primer pronóstico, ¡le sumás 2 puntos!
+        </div>
+      )}
+
+      {error && (
+        <div className="mb-6 rounded-xl bg-red-50 border-2 border-red-400 px-4 py-4 flex items-start gap-3 shadow-md">
+          <span className="text-3xl shrink-0 leading-none">⚠️</span>
+          <div>
+            <p className="font-bold text-red-800 text-base">No pudimos crear tu cuenta</p>
+            <p className="text-red-700 mt-1">{error}</p>
+          </div>
         </div>
       )}
 
@@ -322,7 +339,15 @@ function RegistroContent() {
           {loading ? "Creando cuenta..." : "Crear cuenta y jugar"}
         </button>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <div className="rounded-xl bg-red-50 border-2 border-red-400 px-4 py-4 flex items-start gap-3 shadow-md">
+            <span className="text-3xl shrink-0 leading-none">⚠️</span>
+            <div>
+              <p className="font-bold text-red-800 text-base">No pudimos crear tu cuenta</p>
+              <p className="text-red-700 mt-1">{error}</p>
+            </div>
+          </div>
+        )}
 
         <p className="text-sm text-center text-nda-dark/70">
           ¿Ya tenés cuenta?{" "}

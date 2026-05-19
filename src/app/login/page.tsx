@@ -83,7 +83,18 @@ function LoginContent() {
             </button>
           </form>
 
-          {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+          {error && (
+            <div className="mt-4 rounded-xl bg-red-50 border-2 border-red-400 px-4 py-4 flex items-start gap-3 shadow-md">
+              <span className="text-3xl shrink-0 leading-none">⚠️</span>
+              <div>
+                <p className="font-bold text-red-800 text-base">No pudimos ingresar</p>
+                <p className="text-red-700 mt-1">{error}</p>
+                <p className="text-red-700 text-xs mt-2">
+                  Probá recuperar tu contraseña con el link de abajo.
+                </p>
+              </div>
+            </div>
+          )}
 
           <p className="mt-4 text-sm text-center">
             <Link
