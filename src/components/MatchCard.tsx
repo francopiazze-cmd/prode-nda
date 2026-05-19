@@ -51,6 +51,7 @@ const TEAM_MAP: Record<string, { es: string; flag: string }> = {
   "Turkey":                 { es: "Turquía",            flag: "🇹🇷" },
   "Türkiye":                { es: "Turquía",            flag: "🇹🇷" },
   "Czech Republic":         { es: "República Checa",    flag: "🇨🇿" },
+  "Czechia":                { es: "República Checa",    flag: "🇨🇿" },
   "Slovakia":               { es: "Eslovaquia",         flag: "🇸🇰" },
   "Hungary":                { es: "Hungría",            flag: "🇭🇺" },
   "Romania":                { es: "Rumania",            flag: "🇷🇴" },
