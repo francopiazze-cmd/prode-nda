@@ -164,8 +164,10 @@ type Props = {
 };
 
 export function MatchCard({ match, prediction, onSave }: Props) {
-  const [home, setHome] = useState<number>(prediction?.home_score ?? 0);
-  const [away, setAway] = useState<number>(prediction?.away_score ?? 0);
+  // null = sin cargar todavía (placeholder visible)
+  // number = valor ingresado (incluido 0)
+  const [home, setHome] = useState<number | null>(prediction?.home_score ?? null);
+  const [away, setAway] = useState<number | null>(prediction?.away_score ?? null);
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const locked = isPredictionLocked(match.utc_kickoff);
@@ -181,6 +183,14 @@ export function MatchCard({ match, prediction, onSave }: Props) {
       )
     : null;
 
+  // Si llega un nuevo prediction desde el padre (post-save), sincronizar
+  useEffect(() => {
+    if (prediction) {
+      setHome(prediction.home_score);
+      setAway(prediction.away_score);
+    }
+  }, [prediction]);
+
   useEffect(() => {
     if (savedAt === null) return;
     const t = setTimeout(() => setSavedAt(null), 2000);
@@ -189,9 +199,12 @@ export function MatchCard({ match, prediction, onSave }: Props) {
 
   async function handleSave() {
     if (locked || saving) return;
+    // Si dejaron alguno vacío, considerar 0
+    const h = home ?? 0;
+    const a = away ?? 0;
     setSaving(true);
     try {
-      await onSave(home, away);
+      await onSave(h, a);
       setSavedAt(Date.now());
     } finally {
       setSaving(false);
@@ -286,8 +299,8 @@ function ScoreInput({
   onChange,
   disabled
 }: {
-  value: number;
-  onChange: (n: number) => void;
+  value: number | null;
+  onChange: (n: number | null) => void;
   disabled: boolean;
 }) {
   return (
@@ -296,12 +309,18 @@ function ScoreInput({
       min={0}
       max={20}
       disabled={disabled}
-      value={value}
+      value={value ?? ""}
+      placeholder="–"
       onChange={(e) => {
-        const n = Number(e.target.value);
+        const raw = e.target.value;
+        if (raw === "") {
+          onChange(null);
+          return;
+        }
+        const n = Number(raw);
         if (Number.isFinite(n) && n >= 0 && n <= 20) onChange(n);
       }}
-      className="w-14 h-12 rounded-xl border border-nda-primary/20 text-center text-lg font-bold text-nda-dark bg-white focus:border-nda-primary focus:outline-none focus:ring-2 focus:ring-nda-primary/20 disabled:bg-nda-soft disabled:text-nda-dark/60 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+      className="w-14 h-12 rounded-xl border border-nda-primary/20 text-center text-lg font-bold text-nda-dark bg-white focus:border-nda-primary focus:outline-none focus:ring-2 focus:ring-nda-primary/20 disabled:bg-nda-soft disabled:text-nda-dark/60 placeholder:text-nda-dark/30 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
     />
   );
 }

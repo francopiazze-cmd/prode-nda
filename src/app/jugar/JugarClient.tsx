@@ -166,14 +166,15 @@ export function JugarClient({ matches, predictions, referralCode }: Props) {
         .eq("id", existing.id)
         .select()
         .single();
-      if (!error && data) setLocalPreds({ ...localPreds, [matchId]: data });
+      // Functional setState evita pisar updates concurrentes
+      if (!error && data) setLocalPreds((prev) => ({ ...prev, [matchId]: data }));
     } else {
       const { data, error } = await supabase
         .from("predictions")
         .insert({ user_id: userId, match_id: matchId, home_score: home, away_score: away })
         .select()
         .single();
-      if (!error && data) setLocalPreds({ ...localPreds, [matchId]: data });
+      if (!error && data) setLocalPreds((prev) => ({ ...prev, [matchId]: data }));
     }
   }
 
