@@ -25,6 +25,7 @@ export async function middleware(req: NextRequest) {
 
   const path = req.nextUrl.pathname;
   const isAuthRoute = path.startsWith("/login") || path.startsWith("/registro") || path.startsWith("/r/");
+  const isRecoveryRoute = path.startsWith("/recuperar-clave");
   const isProtectedRoute =
     path.startsWith("/jugar") || path.startsWith("/perfil") || path.startsWith("/admin");
 
@@ -40,6 +41,10 @@ export async function middleware(req: NextRequest) {
     url.pathname = "/jugar";
     return NextResponse.redirect(url);
   }
+
+  // /recuperar-clave debe ser accesible tanto si está logueado (recovery
+  // flow setea una sesión temporal) como si no.
+  void isRecoveryRoute;
 
   return res;
 }

@@ -85,7 +85,16 @@ function LoginContent() {
 
           {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
-          <p className="mt-6 text-sm text-center text-nda-dark/70">
+          <p className="mt-4 text-sm text-center">
+            <Link
+              href="/recuperar-clave"
+              className="text-nda-dark/60 hover:text-nda-primary underline"
+            >
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </p>
+
+          <p className="mt-4 text-sm text-center text-nda-dark/70">
             ¿No tenés cuenta?{" "}
             <Link
               href="/registro"
