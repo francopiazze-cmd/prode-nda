@@ -25,7 +25,7 @@ function RegistroContent() {
     phone: "",
     province: "",
     insurances: [] as string[],
-    is_nda_client: false,
+    is_nda_client: null as boolean | null,
     nda_license_plate: "",
     consent: false,
   });
@@ -66,6 +66,10 @@ function RegistroContent() {
     }
     if (!form.consent) {
       setError("Tenés que aceptar el tratamiento de datos para continuar.");
+      return;
+    }
+    if (form.is_nda_client === null) {
+      setError("Indicá si sos cliente de NDA o no.");
       return;
     }
     if (form.is_nda_client && !form.nda_license_plate.trim()) {
@@ -110,8 +114,8 @@ function RegistroContent() {
         phone: form.phone.trim() || null,
         province: form.province || null,
         insurances: form.insurances,
-        is_nda_client: form.is_nda_client,
-        nda_license_plate: form.is_nda_client
+        is_nda_client: form.is_nda_client === true,
+        nda_license_plate: form.is_nda_client === true
           ? form.nda_license_plate.trim().toUpperCase()
           : null,
         referral_code: ref || null,
@@ -257,8 +261,8 @@ function RegistroContent() {
             <button
               type="button"
               onClick={() => setForm({ ...form, is_nda_client: true })}
-              className={`rounded-xl border px-3 py-2 text-sm font-medium transition ${
-                form.is_nda_client
+              className={`rounded-xl border-2 px-3 py-2 text-sm font-medium transition ${
+                form.is_nda_client === true
                   ? "border-nda-primary bg-nda-primary text-white"
                   : "border-nda-primary/20 bg-white hover:bg-nda-soft"
               }`}
@@ -268,8 +272,8 @@ function RegistroContent() {
             <button
               type="button"
               onClick={() => setForm({ ...form, is_nda_client: false, nda_license_plate: "" })}
-              className={`rounded-xl border px-3 py-2 text-sm font-medium transition ${
-                !form.is_nda_client
+              className={`rounded-xl border-2 px-3 py-2 text-sm font-medium transition ${
+                form.is_nda_client === false
                   ? "border-nda-primary bg-nda-primary text-white"
                   : "border-nda-primary/20 bg-white hover:bg-nda-soft"
               }`}
@@ -278,7 +282,13 @@ function RegistroContent() {
             </button>
           </div>
 
-          {form.is_nda_client && (
+          {form.is_nda_client === null && (
+            <p className="text-xs text-nda-dark/50 text-center">
+              👆 Elegí una opción para continuar
+            </p>
+          )}
+
+          {form.is_nda_client === true && (
             <Field
               label="Patente del auto asegurado"
               hint="Si no tenés seguro de auto, escribí el número de póliza."
