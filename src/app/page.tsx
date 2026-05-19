@@ -117,10 +117,13 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
-            <PrizeCard place="1°" highlight icon={<TvIcon />} title="Smart TV 55″" desc="Modelo a confirmar" />
-            <PrizeCard place="2°" icon={<CoffeeIcon />} title="Cafetera Nespresso" desc="Modelo a confirmar" />
-            <PrizeCard place="3°" icon={<DishIcon />} title="Gift card cena" desc="Kansas Nordelta" />
-            <PrizeCard place="Embajador" icon={<MegaphoneIcon />} title="Premio aparte" desc="Premio aparte para quien más amigos sume al prode. Si convertís tu grupo de WhatsApp en jugadores, ganás aunque no aciertes un solo partido." />
+            <PrizeCard place="1°" highlight icon={<TvIcon />} title="Smart TV 55″" desc="Al campeón del prode." />
+            <PrizeCard place="2°" icon={<CoffeeIcon />} title="Cafetera Nespresso" desc="Para el subcampeón." />
+            <PrizeCard place="3°" icon={<ForkKnifeIcon />} title="Gift card cena" desc="Kansas Nordelta" />
+            <PrizeCard place="Embajador" icon={<StarGroupIcon />} title="Premio especial" desc="Para quien más amigos sume al prode. Si convertís tu grupo de WhatsApp en jugadores, ganás aunque no aciertes un solo partido." />
+          </div>
+          <div className="mt-3 grid grid-cols-1 gap-3">
+            <PrizeCard place="🏅 Semanal" icon={<SoccerBallIcon />} title="Pelota oficial" desc="Sorteamos una pelota entre los 10 mejores de cada semana. Más arriba estás, más chances tenés." />
           </div>
         </section>
 
@@ -284,5 +287,20 @@ function DishIcon() {
 function MegaphoneIcon() {
   return (
     <svg {...iconProps}><path d="M3 11l18-8v18l-18-8z" /><path d="M11 11v6" /><path d="M3 11h2v4H3z" /></svg>
+  );
+}
+function ForkKnifeIcon() {
+  return (
+    <svg {...iconProps}><path d="M3 2v7c0 1.1.9 2 2 2h1v11h2V11h1a2 2 0 0 0 2-2V2h-2v5H7V2H5v5H4V2H3z" /><path d="M19 2v20h-2V12h-1a2 2 0 0 1-2-2V6a4 4 0 0 1 4-4h1z" /></svg>
+  );
+}
+function StarGroupIcon() {
+  return (
+    <svg {...iconProps}><path d="M17 21v-2a4 4 0 0 0-3-3.87" /><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" /></svg>
+  );
+}
+function SoccerBallIcon() {
+  return (
+    <svg {...iconProps}><circle cx="12" cy="12" r="10" /><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3" /></svg>
   );
 }
