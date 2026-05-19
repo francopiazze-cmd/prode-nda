@@ -148,6 +148,8 @@ function RegistroContent() {
         <Field label="Nombre y apellido">
           <input
             required
+            type="text"
+            autoComplete="name"
             className="input"
             value={form.full_name}
             onChange={(e) => setForm({ ...form, full_name: e.target.value })}
