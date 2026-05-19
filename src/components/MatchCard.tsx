@@ -100,6 +100,7 @@ const TEAM_MAP: Record<string, { es: string; flag: string }> = {
   "Uganda":                 { es: "Uganda",             flag: "🇺🇬" },
   "Angola":                 { es: "Angola",             flag: "🇦🇴" },
   "Cape Verde":             { es: "Cabo Verde",         flag: "🇨🇻" },
+  "Cape Verde Islands":     { es: "Cabo Verde",         flag: "🇨🇻" },
   "Guinea":                 { es: "Guinea",             flag: "🇬🇳" },
   "Benin":                  { es: "Benín",              flag: "🇧🇯" },
   "Gabon":                  { es: "Gabón",              flag: "🇬🇦" },
