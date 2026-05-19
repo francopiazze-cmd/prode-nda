@@ -221,13 +221,35 @@ export function MatchCard({ match, prediction, onSave }: Props) {
     timeZone: "America/Argentina/Buenos_Aires"
   });
 
+  const hasPrediction = !!prediction;
+  // Card resaltado cyan suave si ya cargó pronóstico y todavía no se jugó
+  const predictedStyle =
+    hasPrediction && !finished && !live
+      ? "!bg-nda-accent/10 !border-nda-accent/40"
+      : "";
+
   return (
-    <div className={`card relative ${live ? "border-l-4 border-l-nda-accent glow-cyan" : ""}`}>
+    <div
+      className={`card relative ${
+        live ? "border-l-4 border-l-nda-accent glow-cyan" : ""
+      } ${predictedStyle}`}
+    >
       <div className="flex items-center justify-between text-xs mb-3">
-        <span className="text-nda-dark/60">{stageLabel(match.stage)}{match.group_letter ? ` · Grupo ${match.group_letter}` : ""}</span>
+        <span className="text-nda-dark/60">
+          {stageLabel(match.stage)}
+          {match.group_letter ? ` · Grupo ${match.group_letter}` : ""}
+        </span>
         {live ? (
           <span className="chip bg-nda-accent/20 text-nda-primary">
-            <span className="inline-block w-2 h-2 rounded-full bg-nda-accent animate-pulse" /> En vivo
+            <span className="inline-block w-2 h-2 rounded-full bg-nda-accent animate-pulse" />{" "}
+            En vivo
+          </span>
+        ) : hasPrediction && !finished ? (
+          <span className="flex items-center gap-1.5 text-nda-primary font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-nda-primary" />
+            Pronosticado
+            <span className="text-nda-dark/40 font-normal ml-1">·</span>
+            <span className="text-nda-dark/50 font-normal">{dateStr}</span>
           </span>
         ) : (
           <span className="text-nda-dark/60">{dateStr}</span>
