@@ -57,6 +57,32 @@ export function AdminClient({ pending: initialPending, verified: initialVerified
     ]);
   }
 
+  async function handleReject(client: PendingClient) {
+    const ok = window.confirm(
+      `¿Rechazar a ${client.full_name}?\n\nSe marca como NO cliente NDA y desaparece de pendientes. Sigue jugando, pero sin los +20 puntos.`
+    );
+    if (!ok) return;
+
+    setLoading(client.id);
+    setError(null);
+
+    const res = await fetch("/api/admin/reject-client", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profileId: client.id }),
+    });
+
+    setLoading(null);
+
+    if (!res.ok) {
+      setError("No se pudo rechazar. Intentá de nuevo.");
+      return;
+    }
+
+    // Sacarlo del listado de pendientes
+    setPending((prev) => prev.filter((p) => p.id !== client.id));
+  }
+
   function formatDate(iso: string) {
     return new Date(iso).toLocaleString("es-AR", {
       day: "2-digit",
@@ -111,13 +137,22 @@ export function AdminClient({ pending: initialPending, verified: initialVerified
                     </span>
                   </div>
                 </div>
-                <button
-                  onClick={() => handleValidate(client)}
-                  disabled={loading === client.id}
-                  className="btn-primary !py-2 !px-4 text-sm shrink-0"
-                >
-                  {loading === client.id ? "Validando..." : "Validar ✓"}
-                </button>
+                <div className="flex flex-col gap-2 shrink-0">
+                  <button
+                    onClick={() => handleValidate(client)}
+                    disabled={loading === client.id}
+                    className="btn-primary !py-2 !px-4 text-sm"
+                  >
+                    {loading === client.id ? "..." : "Validar ✓"}
+                  </button>
+                  <button
+                    onClick={() => handleReject(client)}
+                    disabled={loading === client.id}
+                    className="rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 text-sm transition disabled:opacity-50"
+                  >
+                    Rechazar ✕
+                  </button>
+                </div>
               </div>
             ))}
           </div>

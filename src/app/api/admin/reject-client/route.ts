@@ -1,0 +1,42 @@
+import { NextRequest, NextResponse } from "next/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
+
+const ADMIN_EMAILS = [
+  "francopiazze@gmail.com",
+  "capraromauro@hotmail.com",
+];
+
+export async function POST(req: NextRequest) {
+  // Verificar que quien llama es admin
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user || !user.email || !ADMIN_EMAILS.includes(user.email)) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  const { profileId } = (await req.json()) as { profileId: string };
+  if (!profileId) {
+    return NextResponse.json({ error: "Falta profileId" }, { status: 400 });
+  }
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("profiles")
+    .update({
+      is_nda_client: false,
+      nda_license_plate: null,
+      nda_client_verified: false,
+      nda_client_verified_at: null,
+    })
+    .eq("id", profileId);
+
+  if (error) {
+    console.error("Error rechazando cliente:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}
