@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 
-const ADMIN_EMAIL = "piazze@estudio-pyp.com.ar";
+const ADMIN_EMAIL = "francopiazze@gmail.com";
 
 export async function POST(req: NextRequest) {
   // Verificar que quien llama es el admin

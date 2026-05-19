@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { AdminClient } from "./AdminClient";
 
-const ADMIN_EMAIL = "piazze@estudio-pyp.com.ar";
+const ADMIN_EMAIL = "francopiazze@gmail.com";
 
 export default async function AdminPage() {
   const supabase = createClient();
