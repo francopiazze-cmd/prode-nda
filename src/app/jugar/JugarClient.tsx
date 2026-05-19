@@ -39,13 +39,11 @@ const KNOCKOUT_ORDER: MatchStage[] = [
  * 4. Default: GROUP_STAGE
  */
 function getActiveStage(matches: Match[]): MatchStage {
-  const live = matches.find(
-    (m) => m.status === "LIVE" || m.status === "IN_PLAY"
-  );
+  const live = matches.find((m) => m.status === "LIVE");
   if (live) return live.stage;
 
   const upcoming = [...matches]
-    .filter((m) => m.status !== "FINISHED" && m.status !== "AWARDED")
+    .filter((m) => m.status === "SCHEDULED")
     .sort(
       (a, b) =>
         new Date(a.utc_kickoff).getTime() - new Date(b.utc_kickoff).getTime()
@@ -53,7 +51,7 @@ function getActiveStage(matches: Match[]): MatchStage {
   if (upcoming.length > 0) return upcoming[0].stage;
 
   const finished = [...matches]
-    .filter((m) => m.status === "FINISHED" || m.status === "AWARDED")
+    .filter((m) => m.status === "FINISHED")
     .sort(
       (a, b) =>
         new Date(b.utc_kickoff).getTime() - new Date(a.utc_kickoff).getTime()
@@ -73,8 +71,7 @@ function getDefaultGroup(matches: Match[]): string | null {
     .filter(
       (m) =>
         m.stage === "GROUP_STAGE" &&
-        m.status !== "FINISHED" &&
-        m.status !== "AWARDED" &&
+        m.status === "SCHEDULED" &&
         m.group_letter
     )
     .sort(
