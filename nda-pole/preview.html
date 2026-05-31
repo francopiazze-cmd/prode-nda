@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>NDA Pole · Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF6EF; --sand:#EFE3D3; --clay:#C99B6E; --clayDark:#A9784E;
+    --sage100:#E2ECDC; --sage300:#B4CDA8; --sage400:#94B585; --sage500:#789A68; --sage600:#5F7E52;
+    --ink:#4A413A; --inkSoft:#6B6058;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-tap-highlight-color:transparent}
+  body{
+    margin:0; font-family:Manrope,system-ui,sans-serif; color:var(--ink);
+    background:radial-gradient(120% 80% at 50% -10%, #f7ece0 0%, #fbf6ef 45%, #fbf6ef 100%);
+    min-height:100dvh; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:430px; margin:0 auto; padding:28px 20px 48px; display:flex; flex-direction:column; min-height:100dvh}
+  .serif{font-family:Fraunces,serif}
+  .top{display:flex; justify-content:space-between; align-items:center}
+  .eyebrow{font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--clay)}
+  .insta{font-size:12px; font-weight:600; color:var(--inkSoft); text-decoration:none}
+  .insta:hover{text-decoration:underline}
+  .hero{position:relative; margin-top:16px; border-radius:28px; overflow:hidden; box-shadow:0 12px 40px -16px rgba(74,65,58,.35)}
+  .hero .img{aspect-ratio:4/5; width:100%;
+    background-image:linear-gradient(180deg, rgba(74,65,58,0) 35%, rgba(74,65,58,.55) 100%),
+      linear-gradient(135deg,#d8c7ad 0%,#c9b79c 40%,#bca98c 100%);
+    background-size:cover; background-position:center;
+    display:flex; align-items:flex-end}
+  .hero .ph{position:absolute; top:14px; right:14px; font-size:11px; color:rgba(255,255,255,.85); background:rgba(74,65,58,.35); padding:4px 10px; border-radius:999px}
+  .hero .name{position:absolute; left:20px; bottom:18px; color:var(--cream); font-size:40px; line-height:1; text-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .intro{margin-top:16px; font-size:15px; line-height:1.6; color:var(--inkSoft)}
+  .btn{display:flex; align-items:center; justify-content:center; gap:8px; width:100%; border:0; cursor:pointer;
+    border-radius:999px; padding:16px 24px; font-size:16px; font-weight:700; font-family:inherit;
+    background:var(--sage500); color:var(--cream); box-shadow:0 12px 40px -16px rgba(74,65,58,.35); transition:.15s}
+  .btn:hover{background:var(--sage600)}
+  .btn:active{transform:scale(.98)}
+  .btn[disabled]{opacity:.5; pointer-events:none}
+  .btn.ghost{background:rgba(255,255,255,.6); color:var(--ink); border:1px solid var(--sand); padding:13px 20px; font-size:14px}
+  .btn.ghost:hover{background:#fff}
+  .mt5{margin-top:20px}
+  h2.sec{font-family:Fraunces,serif; font-size:24px; margin:0}
+  .sub{margin:4px 0 0; font-size:14px; color:var(--inkSoft)}
+  .card{border-radius:28px; border:1px solid rgba(239,227,211,.7); background:rgba(255,255,255,.72); backdrop-filter:blur(4px); box-shadow:0 12px 40px -16px rgba(74,65,58,.35)}
+  .mod{display:flex; gap:16px; align-items:center; padding:20px; text-align:left; width:100%; border:0; background:transparent; cursor:pointer; font-family:inherit}
+  .mod .ic{width:48px; height:48px; flex:0 0 auto; display:grid; place-items:center; border-radius:18px; background:var(--sage100); font-size:24px}
+  .mod .t{font-family:Fraunces,serif; font-size:20px; color:var(--ink)}
+  .mod .d{font-size:14px; color:var(--inkSoft)}
+  .mod .arr{font-size:24px; color:var(--sage400)}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+  .days{display:flex; gap:8px; overflow-x:auto; padding:2px; margin:0 -2px}
+  .day{flex:0 0 auto; border-radius:18px; border:1px solid var(--sand); background:rgba(255,255,255,.6); color:var(--ink); padding:9px 16px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap}
+  .day.on{background:var(--sage500); color:var(--cream); border-color:var(--sage400)}
+  .slot{display:flex; flex-direction:column; gap:2px; align-items:flex-start; text-align:left; padding:16px; cursor:pointer; border:1px solid rgba(239,227,211,.7); border-radius:28px; background:rgba(255,255,255,.72); font-family:inherit}
+  .slot .h{font-family:Fraunces,serif; font-size:18px; color:var(--ink)}
+  .slot .m{font-size:12px; color:var(--inkSoft)}
+  .label{display:block; margin:0 0 6px; font-size:14px; font-weight:600; color:var(--inkSoft)}
+  .field{width:100%; border-radius:16px; border:1px solid var(--sand); background:#fff; padding:12px 16px; font-size:16px; font-family:inherit; color:var(--ink); outline:none}
+  .field:focus{border-color:var(--sage400); box-shadow:0 0 0 3px var(--sage100)}
+  .back{background:none; border:0; color:var(--clay); font-weight:700; font-size:14px; cursor:pointer; padding:0; margin-bottom:16px; font-family:inherit}
+  .back:hover{text-decoration:underline}
+  .summary{display:flex; gap:12px; align-items:center; padding:16px; margin-bottom:16px}
+  .summary .ic{width:44px;height:44px;display:grid;place-items:center;border-radius:18px;background:var(--sage100);font-size:20px}
+  .check{margin:0 auto; width:56px;height:56px;border-radius:999px;background:var(--sage100);display:grid;place-items:center;font-size:30px;color:var(--sage600)}
+  .center{text-align:center}
+  .muted{font-size:12px; color:var(--inkSoft)}
+  .foot{margin-top:auto; padding-top:48px; text-align:center; font-size:12px; color:rgba(107,96,88,.7)}
+  .row{display:flex; flex-direction:column; gap:12px}
+  .space>*+*{margin-top:12px}
+  .fade{animation:fu .35s ease both}
+  @keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .banner{background:#fff7ec;border:1px solid var(--sand);border-radius:16px;padding:10px 14px;font-size:12px;color:var(--clayDark);margin-bottom:14px}
+  .cb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--inkSoft)}
+  .cb input{width:18px;height:18px;accent-color:var(--sage500)}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="banner">👀 Preview de diseño · datos de ejemplo · sin servidor real</div>
+
+  <!-- HERO -->
+  <header class="fade">
+    <div class="top">
+      <span class="eyebrow">Pole Dance &amp; Movimiento</span>
+      <a class="insta" href="#">@tu_instagram</a>
+    </div>
+    <div class="hero">
+      <div class="img"><span class="ph">tu foto va acá (hero.jpg)</span></div>
+      <div class="name serif">Nadia</div>
+    </div>
+    <p class="intro">Clases personalizadas de pole dance. Elegí modalidad, mirá mi disponibilidad y reservá tu lugar en segundos.</p>
+    <button class="btn mt5" onclick="document.getElementById('reservar').scrollIntoView({behavior:'smooth'})">Programá tu clase</button>
+  </header>
+
+  <!-- BOOKING -->
+  <section id="reservar" style="margin-top:40px; scroll-margin-top:16px">
+    <h2 class="sec">Programá tu clase</h2>
+    <p class="sub">Elegí la modalidad y mirá mi disponibilidad.</p>
+    <div id="flow" style="margin-top:20px"></div>
+  </section>
+
+  <footer class="foot">
+    <p>Nadia · Pole Dance &amp; Movimiento</p>
+    <p style="margin-top:4px">Hecho con cariño 🤍</p>
+  </footer>
+</div>
+
+<script>
+const MOD = {
+  presencial:{key:'presencial',label:'Presencial',desc:'En el estudio, una a una o en grupo.',emoji:'💃'},
+  virtual:{key:'virtual',label:'Virtual',desc:'Clase online por videollamada, desde donde estés.',emoji:'📱'},
+};
+const OWNER='Nadia';
+const fmtDay=iso=>{const s=new Intl.DateTimeFormat('es-AR',{weekday:'long',day:'numeric',month:'short'}).format(new Date(iso));return s.charAt(0).toUpperCase()+s.slice(1)};
+const fmtTime=iso=>new Intl.DateTimeFormat('es-AR',{hour:'2-digit',minute:'2-digit'}).format(new Date(iso));
+const dayKey=iso=>new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(iso));
+
+// Demo slots
+function demoSlots(modality){
+  const out=[]; const now=new Date();
+  for(let d=1;d<=10;d++){
+    const day=new Date(now); day.setDate(now.getDate()+d);
+    if(modality==='presencial' && d%2===1){ for(const h of [18,19]){ const s=new Date(day); s.setHours(h,0,0,0); out.push({id:'p'+d+h,modality,starts_at:s.toISOString(),duration_min:60,spots_left:4}); } }
+    if(modality==='virtual' && d%2===0){ const s=new Date(day); s.setHours(10,0,0,0); out.push({id:'v'+d,modality,starts_at:s.toISOString(),duration_min:60,spots_left:1}); }
+  }
+  return out;
+}
+
+const flow=document.getElementById('flow');
+let state={step:'modality',modality:null,slot:null,selectedDay:null};
+
+function render(){
+  flow.innerHTML='';
+  const wrap=document.createElement('div'); wrap.className='fade';
+  if(state.step!=='modality'){ const b=document.createElement('button'); b.className='back'; b.textContent='← Volver'; b.onclick=back; wrap.appendChild(b); }
+
+  if(state.step==='modality') wrap.appendChild(viewModality());
+  else if(state.step==='slot') wrap.appendChild(viewSlots());
+  else if(state.step==='form') wrap.appendChild(viewForm());
+  else if(state.step==='done') wrap.appendChild(viewDone());
+  flow.appendChild(wrap);
+}
+function back(){ if(state.step==='form')state.step='slot'; else if(state.step==='slot'){state.step='modality';state.selectedDay=null;} render(); }
+
+function viewModality(){
+  const c=document.createElement('div'); c.className='row';
+  [MOD.presencial,MOD.virtual].forEach(m=>{
+    const card=document.createElement('div'); card.className='card';
+    const b=document.createElement('button'); b.className='mod';
+    b.innerHTML=`<span class="ic">${m.emoji}</span><span style="flex:1"><span class="t" style="display:block">${m.label}</span><span class="d" style="display:block">${m.desc}</span></span><span class="arr">→</span>`;
+    b.onclick=()=>{state.modality=m.key;state.step='slot';state.selectedDay=null;render();};
+    card.appendChild(b); c.appendChild(card);
+  });
+  return c;
+}
+
+function viewSlots(){
+  const slots=demoSlots(state.modality);
+  const c=document.createElement('div');
+  const lbl=document.createElement('p'); lbl.className='label'; lbl.textContent='Disponibilidad '+MOD[state.modality].label.toLowerCase();
+  c.appendChild(lbl);
+  const map={}; slots.forEach(s=>{const k=dayKey(s.starts_at);(map[k]=map[k]||[]).push(s)});
+  const days=Object.keys(map).sort();
+  if(!state.selectedDay) state.selectedDay=days[0];
+  const dwrap=document.createElement('div'); dwrap.className='days';
+  days.forEach(d=>{const btn=document.createElement('button'); btn.className='day'+(d===state.selectedDay?' on':''); btn.textContent=fmtDay(map[d][0].starts_at); btn.onclick=()=>{state.selectedDay=d;render();}; dwrap.appendChild(btn);});
+  c.appendChild(dwrap);
+  const g=document.createElement('div'); g.className='grid2'; g.style.marginTop='16px';
+  (map[state.selectedDay]||[]).forEach(s=>{
+    const b=document.createElement('button'); b.className='slot';
+    b.innerHTML=`<span class="h">${fmtTime(s.starts_at)} hs</span><span class="m">${s.duration_min} min · ${s.spots_left===1?'1 lugar':s.spots_left+' lugares'}</span>`;
+    b.onclick=()=>{state.slot=s;state.step='form';render();};
+    g.appendChild(b);
+  });
+  c.appendChild(g);
+  return c;
+}
+
+function viewForm(){
+  const s=state.slot; const m=MOD[s.modality];
+  const c=document.createElement('div');
+  const sum=document.createElement('div'); sum.className='card summary';
+  sum.innerHTML=`<span class="ic">${m.emoji}</span><div><p style="margin:0" class="serif" style="font-size:18px">${fmtDay(s.starts_at)} · ${fmtTime(s.starts_at)} hs</p><p style="margin:0" class="m" style="color:var(--inkSoft);font-size:13px">${m.label} · ${s.duration_min} min</p></div>`;
+  c.appendChild(sum);
+  let saved={}; try{saved=JSON.parse(localStorage.getItem('nda-pole-student')||'{}')}catch(e){}
+  const f=document.createElement('form'); f.className='space';
+  f.innerHTML=`
+    <div><label class="label">Nombre y apellido</label><input class="field" id="f_name" autocomplete="name" placeholder="Tu nombre" value="${saved.name||''}" required></div>
+    <div><label class="label">Teléfono</label><input class="field" id="f_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="11 2222 3333" value="${saved.phone||''}" required></div>
+    <div><label class="label">Email</label><input class="field" id="f_email" type="email" inputmode="email" autocomplete="email" placeholder="vos@email.com" value="${saved.email||''}" required></div>
+    <label class="cb"><input type="checkbox" id="f_rem" checked> Recordar mis datos en este celular</label>
+    <button class="btn" type="submit">Confirmar reserva</button>
+  `;
+  f.onsubmit=(e)=>{e.preventDefault();
+    const name=f.querySelector('#f_name').value.trim();
+    const phone=f.querySelector('#f_phone').value.trim();
+    const email=f.querySelector('#f_email').value.trim();
+    if(f.querySelector('#f_rem').checked) localStorage.setItem('nda-pole-student',JSON.stringify({name,phone,email}));
+    state.booking={...s,student_name:name,student_phone:phone,student_email:email};
+    state.step='done'; render();
+  };
+  c.appendChild(f);
+  return c;
+}
+
+function pad(n){return String(n).padStart(2,'0')}
+function icsDate(iso){const d=new Date(iso);return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+'00Z'}
+function viewDone(){
+  const b=state.booking; const m=MOD[b.modality];
+  const start=b.starts_at; const end=new Date(new Date(start).getTime()+b.duration_min*60000).toISOString();
+  const title=`Clase de Pole (${m.label}) con ${OWNER}`;
+  const gcal=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${icsDate(start)}/${icsDate(end)}&details=${encodeURIComponent('Clase '+m.label.toLowerCase()+' con '+OWNER+'.')}`;
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//NDA Pole//ES','BEGIN:VEVENT','UID:'+b.id+'@nda-pole','DTSTAMP:'+icsDate(new Date().toISOString()),'DTSTART:'+icsDate(start),'DTEND:'+icsDate(end),'SUMMARY:'+title,'END:VEVENT','END:VCALENDAR'].join('\r\n');
+  const icsUrl='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
+  const c=document.createElement('div'); c.className='card'; c.style.padding='24px'; c.classList.add('center');
+  c.innerHTML=`
+    <div class="check">✓</div>
+    <h3 class="serif" style="font-size:24px;margin:16px 0 0">¡Reserva confirmada!</h3>
+    <p class="sub" style="margin-top:4px">${fmtDay(start)} · ${fmtTime(start)} hs<br>${m.label} · ${b.duration_min} min</p>
+    <p class="label" style="margin-top:20px">Agregalo a tu calendario:</p>
+    <div class="row">
+      <a class="btn" href="${gcal}" target="_blank" rel="noopener">Agregar a Google Calendar</a>
+      <a class="btn ghost" href="${icsUrl}" download="clase-pole.ics">Agregar a Apple / otro (.ics)</a>
+    </div>
+    <p class="muted" style="margin-top:16px">Te esperamos 🤍 Si necesitás reprogramar, escribime por Instagram.</p>
+  `;
+  const r=document.createElement('button'); r.className='back'; r.style.marginTop='20px'; r.style.marginBottom='0'; r.textContent='Reservar otra clase'; r.onclick=()=>{state={step:'modality',modality:null,slot:null,selectedDay:null};render();};
+  c.appendChild(r);
+  return c;
+}
+
+render();
+</script>
+</body>
+</html>
