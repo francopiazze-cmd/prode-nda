@@ -104,6 +104,27 @@ function getDefaultDayKey(days: DayGroup[]): string | null {
   return days[days.length - 1].key;
 }
 
+/** Suma n días a un key "YYYY-MM-DD" (cálculo de calendario puro) */
+function addDaysKey(key: string, n: number): string {
+  const [y, m, d] = key.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  dt.setUTCDate(dt.getUTCDate() + n);
+  return dt.toISOString().slice(0, 10);
+}
+
+/** "Hoy" / "Mañana" relativo a hoy, o null */
+function relativeLabel(key: string, tk: string): string | null {
+  if (!tk) return null;
+  if (key === tk) return "Hoy";
+  if (key === addDaysKey(tk, 1)) return "Mañana";
+  return null;
+}
+
+/** ¿El día ya pasó? (todos sus partidos ya se jugaron) */
+function isPlayedDay(key: string, tk: string): boolean {
+  return tk !== "" && key < tk;
+}
+
 /**
  * Devuelve la etapa activa del torneo en este momento:
  * 1. Partido en vivo → su etapa
@@ -199,15 +220,36 @@ export function JugarClient({ matches, predictions, referralCode }: Props) {
     });
   }, [selectedDay]);
 
+  const selectedDayPlayed = selectedDay
+    ? isPlayedDay(selectedDay, tk)
+    : false;
+
   const dayMatches = useMemo(() => {
     const dg = days.find((d) => d.key === selectedDay);
-    return dg ? dg.matches : [];
-  }, [days, selectedDay]);
+    if (!dg) return [];
+    // Días ya jugados: del más reciente al más viejo
+    return selectedDayPlayed ? [...dg.matches].reverse() : dg.matches;
+  }, [days, selectedDay, selectedDayPlayed]);
 
   const selectedDayLabel = useMemo(() => {
     const dg = days.find((d) => d.key === selectedDay);
-    return dg ? cap(dg.fullLabel) : "";
-  }, [days, selectedDay]);
+    if (!dg) return "";
+    const rel = relativeLabel(dg.key, tk);
+    return rel ? `${rel} · ${cap(dg.fullLabel)}` : cap(dg.fullLabel);
+  }, [days, selectedDay, tk]);
+
+  // Índice del día seleccionado para navegar con flechas
+  const dayIndex = useMemo(
+    () => days.findIndex((d) => d.key === selectedDay),
+    [days, selectedDay]
+  );
+  const goPrevDay = () => {
+    if (dayIndex > 0) setSelectedDay(days[dayIndex - 1].key);
+  };
+  const goNextDay = () => {
+    if (dayIndex >= 0 && dayIndex < days.length - 1)
+      setSelectedDay(days[dayIndex + 1].key);
+  };
 
   function dayProgress(dg: DayGroup) {
     const done = dg.matches.filter((m) => localPreds[m.id]).length;
@@ -321,73 +363,109 @@ export function JugarClient({ matches, predictions, referralCode }: Props) {
             </div>
           ) : (
             <>
-              {/* Carrusel de días */}
-              <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
-                {days.map((dg) => {
-                  const { done, total } = dayProgress(dg);
-                  const allDone = done === total && total > 0;
-                  const isSelected = selectedDay === dg.key;
-                  const isToday = tk !== "" && dg.key === tk;
-                  return (
-                    <button
-                      key={dg.key}
-                      ref={isSelected ? selectedDayRef : null}
-                      onClick={() => setSelectedDay(dg.key)}
-                      className={`relative shrink-0 snap-center rounded-xl border-2 px-2.5 py-2 text-center transition w-[64px] ${
-                        isSelected
-                          ? "border-nda-primary bg-nda-primary text-white"
-                          : "border-nda-primary/20 bg-white hover:bg-nda-soft"
-                      }`}
-                    >
-                      <p
-                        className={`text-[10px] uppercase font-semibold ${
-                          isSelected ? "text-white/70" : "text-nda-dark/40"
+              {/* Carrusel de días con flechas */}
+              <div className="flex items-stretch gap-2">
+                <button
+                  onClick={goPrevDay}
+                  disabled={dayIndex <= 0}
+                  aria-label="Día anterior"
+                  className="shrink-0 w-9 rounded-xl border-2 border-nda-primary/20 bg-white text-nda-primary text-xl font-bold flex items-center justify-center hover:bg-nda-soft transition disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  ‹
+                </button>
+
+                <div className="flex-1 flex gap-2 overflow-x-auto pb-2 px-0.5 snap-x scrollbar-hide">
+                  {days.map((dg) => {
+                    const { done, total } = dayProgress(dg);
+                    const allDone = done === total && total > 0;
+                    const isSelected = selectedDay === dg.key;
+                    const isToday = tk !== "" && dg.key === tk;
+                    const played = isPlayedDay(dg.key, tk);
+                    const rel = relativeLabel(dg.key, tk);
+                    const topLabel =
+                      rel === "Hoy"
+                        ? "HOY"
+                        : rel === "Mañana"
+                        ? "MAÑ"
+                        : dg.weekday.toUpperCase();
+                    return (
+                      <button
+                        key={dg.key}
+                        ref={isSelected ? selectedDayRef : null}
+                        onClick={() => setSelectedDay(dg.key)}
+                        className={`relative shrink-0 snap-center rounded-xl border-2 px-2.5 py-2 text-center transition w-[60px] ${
+                          isSelected
+                            ? "border-nda-primary bg-nda-primary text-white"
+                            : isToday
+                            ? "border-nda-success bg-white hover:bg-nda-soft"
+                            : played
+                            ? "border-nda-dark/10 bg-nda-soft/60 opacity-60 hover:opacity-100"
+                            : "border-nda-primary/20 bg-white hover:bg-nda-soft"
                         }`}
                       >
-                        {dg.weekday}
-                      </p>
-                      <p
-                        className={`text-lg font-extrabold leading-none ${
-                          isSelected ? "text-white" : "text-nda-dark"
-                        }`}
-                      >
-                        {dg.day}
-                      </p>
-                      <p
-                        className={`text-[10px] uppercase ${
-                          isSelected ? "text-white/70" : "text-nda-dark/40"
-                        }`}
-                      >
-                        {dg.month}
-                      </p>
-                      <p
-                        className={`text-[10px] mt-1 font-medium ${
-                          isSelected ? "text-white/80" : "text-nda-dark/50"
-                        }`}
-                      >
-                        {done}/{total}
-                      </p>
-                      {allDone && (
-                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-nda-accent rounded-full flex items-center justify-center text-[10px]">
-                          ✓
-                        </span>
-                      )}
-                      {isToday && (
-                        <span className="absolute -top-1 -left-1 px-1 py-0.5 bg-nda-success text-nda-dark text-[8px] font-bold rounded-full leading-none">
-                          HOY
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
+                        <p
+                          className={`text-[10px] uppercase font-bold tracking-tight ${
+                            isSelected
+                              ? "text-white/80"
+                              : isToday
+                              ? "text-nda-success"
+                              : "text-nda-dark/40"
+                          }`}
+                        >
+                          {topLabel}
+                        </p>
+                        <p
+                          className={`text-lg font-extrabold leading-none ${
+                            isSelected ? "text-white" : "text-nda-dark"
+                          }`}
+                        >
+                          {dg.day}
+                        </p>
+                        <p
+                          className={`text-[10px] uppercase ${
+                            isSelected ? "text-white/70" : "text-nda-dark/40"
+                          }`}
+                        >
+                          {dg.month}
+                        </p>
+                        <p
+                          className={`text-[10px] mt-1 font-medium ${
+                            isSelected ? "text-white/80" : "text-nda-dark/50"
+                          }`}
+                        >
+                          {done}/{total}
+                        </p>
+                        {allDone && !played && (
+                          <span className="absolute -top-1 -right-1 w-4 h-4 bg-nda-accent rounded-full flex items-center justify-center text-[10px]">
+                            ✓
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={goNextDay}
+                  disabled={dayIndex >= days.length - 1}
+                  aria-label="Día siguiente"
+                  className="shrink-0 w-9 rounded-xl border-2 border-nda-primary/20 bg-white text-nda-primary text-xl font-bold flex items-center justify-center hover:bg-nda-soft transition disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  ›
+                </button>
               </div>
 
               {/* Partidos del día seleccionado */}
               {selectedDay && (
                 <div>
-                  <h3 className="font-bold text-nda-dark mb-3">
-                    {selectedDayLabel}
-                    <span className="text-nda-dark/40 font-normal text-sm ml-2">
+                  <h3 className="font-bold text-nda-dark mb-3 flex items-center gap-2 flex-wrap">
+                    <span>{selectedDayLabel}</span>
+                    {selectedDayPlayed && (
+                      <span className="chip bg-nda-dark/10 text-nda-dark/60 !text-[10px]">
+                        Ya jugados
+                      </span>
+                    )}
+                    <span className="text-nda-dark/40 font-normal text-sm">
                       {dayMatches.length}{" "}
                       {dayMatches.length === 1 ? "partido" : "partidos"}
                     </span>

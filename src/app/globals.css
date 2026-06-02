@@ -59,3 +59,12 @@ html, body {
     @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider;
   }
 }
+
+/* Ocultar scrollbar manteniendo el scroll (carrusel de días) */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
