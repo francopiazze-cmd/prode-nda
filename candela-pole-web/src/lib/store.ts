@@ -59,7 +59,7 @@ const demo = (() => {
             duration_min: site.defaultDurationMin,
             capacity: 4,
             booked_count: 0,
-            location: "Estudio NDA Pole — (cargá tu dirección en el panel)",
+            location: "Estudio de Candela — (cargá tu dirección en el panel)",
             meeting_link: null,
             note: null,
             created_at: new Date().toISOString(),

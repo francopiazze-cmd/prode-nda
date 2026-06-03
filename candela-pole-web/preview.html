@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>NDA Pole · Preview</title>
+<title>Candela Pole · Preview</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -92,7 +92,7 @@
     </div>
     <div class="hero">
       <div class="img"><span class="ph">tu foto va acá (hero.jpg)</span></div>
-      <div class="name serif">Nadia</div>
+      <div class="name serif">Candela</div>
     </div>
     <p class="intro">Clases personalizadas de pole dance. Elegí modalidad, mirá mi disponibilidad y reservá tu lugar en segundos.</p>
     <button class="btn mt5" onclick="document.getElementById('reservar').scrollIntoView({behavior:'smooth'})">Programá tu clase</button>
@@ -106,7 +106,7 @@
   </section>
 
   <footer class="foot">
-    <p>Nadia · Pole Dance &amp; Movimiento</p>
+    <p>Candela · Pole Dance &amp; Movimiento</p>
     <p style="margin-top:4px">Hecho con cariño 🤍</p>
   </footer>
 </div>
@@ -116,7 +116,7 @@ const MOD = {
   presencial:{key:'presencial',label:'Presencial',desc:'En el estudio, una a una o en grupo.',emoji:'💃'},
   virtual:{key:'virtual',label:'Virtual',desc:'Clase online por videollamada, desde donde estés.',emoji:'📱'},
 };
-const OWNER='Nadia';
+const OWNER='Candela';
 const fmtDay=iso=>{const s=new Intl.DateTimeFormat('es-AR',{weekday:'long',day:'numeric',month:'short'}).format(new Date(iso));return s.charAt(0).toUpperCase()+s.slice(1)};
 const fmtTime=iso=>new Intl.DateTimeFormat('es-AR',{hour:'2-digit',minute:'2-digit'}).format(new Date(iso));
 const dayKey=iso=>new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(iso));

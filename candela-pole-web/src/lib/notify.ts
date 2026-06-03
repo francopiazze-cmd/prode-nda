@@ -7,7 +7,7 @@ import { site, modalities } from "./config";
 export async function notifyOwner(booking: Booking): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   const ownerEmail = process.env.OWNER_EMAIL;
-  const from = process.env.NOTIFY_FROM || `NDA Pole <onboarding@resend.dev>`;
+  const from = process.env.NOTIFY_FROM || `Candela Pole <onboarding@resend.dev>`;
   if (!apiKey || !ownerEmail) return;
 
   const modalidad = modalities[booking.modality].label;

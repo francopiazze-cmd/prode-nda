@@ -1,12 +1,13 @@
-# NDA Pole — sitio de reservas
+# Candela Pole — sitio de reservas
 
-Web **mobile-first** para que una profe de pole dance publique su disponibilidad
-y sus alumnas reserven clases. Pensada para colgar en el Linktree del Instagram.
+Web **mobile-first** para que Candela (profe de pole dance) publique su
+disponibilidad y sus alumnas reserven clases. Pensada para colgar en el Linktree
+del Instagram.
 
-> ⚠️ Este proyecto está adentro de la carpeta `nda-pole/` del repo `prode-nda`
-> sólo por una limitación temporal. Es **100% autocontenido**: podés moverlo a su
-> propio repositorio cuando quieras (copiando la carpeta o con `git mv`), no
-> depende de nada de afuera.
+> ⚠️ Por ahora esta carpeta (`candela-pole-web/`) vive dentro del repo `prode-nda`
+> sólo por una limitación temporal. Es **100% autocontenida**: podés moverla a su
+> propio repositorio cuando quieras, no depende de nada de afuera. Ver
+> "Sacar a su propio repo" más abajo.
 
 ## Qué hace
 
@@ -85,10 +86,33 @@ Si lo dejás vacío, no pasa nada: la reserva igual se guarda.
 ## Deploy en Vercel
 
 1. Subir el repo a GitHub.
-2. Importar en [vercel.com](https://vercel.com). Si el proyecto vive en
-   `nda-pole/`, setear **Root Directory = `nda-pole`**.
+2. Importar en [vercel.com](https://vercel.com). Si todavía está dentro de
+   `prode-nda`, setear **Root Directory = `candela-pole-web`**.
 3. Cargar las variables de entorno (las de `.env.example`).
 4. Deploy. Apuntar el dominio y pegar el link en el Linktree.
+
+## Sacar a su propio repo
+
+Esta carpeta es independiente. Para que viva en su propio repositorio
+`candela-pole-web` (recomendado), desde la raíz del repo `prode-nda`:
+
+```bash
+# 1. Copiá la carpeta a un lugar nuevo, fuera de prode-nda
+cp -r candela-pole-web ~/candela-pole-web
+cd ~/candela-pole-web
+
+# 2. Arrancá un repo git limpio
+git init
+git add .
+git commit -m "Candela Pole — sitio de reservas"
+
+# 3. Creá un repo vacío en GitHub llamado candela-pole-web y conectalo
+git remote add origin https://github.com/TU-USUARIO/candela-pole-web.git
+git branch -M main
+git push -u origin main
+```
+
+Listo: a partir de ahí trabajás desde el repo nuevo, sin nada de `prode-nda`.
 
 ## Personalizar
 

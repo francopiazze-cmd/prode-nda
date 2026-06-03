@@ -1,7 +1,7 @@
 // Datos editables del sitio. Cambiá estos valores por los reales.
 export const site = {
   // Nombre que se ve en el hero y en los eventos del calendario.
-  name: "Nadia",
+  name: "Candela",
   tagline: "Pole Dance & Movimiento",
   // Bajada corta debajo del nombre.
   intro:
