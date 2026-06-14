@@ -28,6 +28,30 @@ export function AdminClient({ pending: initialPending, verified: initialVerified
   const [verified, setVerified] = useState(initialVerified);
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshMsg, setRefreshMsg] = useState<string | null>(null);
+
+  async function handleRefreshScores() {
+    setRefreshing(true);
+    setRefreshMsg(null);
+    try {
+      const res = await fetch("/api/admin/refresh-scores", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        setRefreshMsg("⚠️ Error al actualizar. Probá de nuevo en un minuto.");
+      } else if (data.scoredMatches > 0) {
+        setRefreshMsg(
+          `✅ Listo: ${data.scoredMatches} partido(s) nuevo(s) puntuado(s). El ranking ya está actualizado.`
+        );
+      } else {
+        setRefreshMsg("✅ Todo al día. No había partidos nuevos terminados.");
+      }
+    } catch {
+      setRefreshMsg("⚠️ Error de conexión. Probá de nuevo.");
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   async function handleValidate(client: PendingClient) {
     setLoading(client.id);
@@ -100,6 +124,29 @@ export function AdminClient({ pending: initialPending, verified: initialVerified
         <h1 className="text-2xl font-extrabold text-nda-dark">Panel de administración</h1>
         <p className="text-nda-dark/60 text-sm mt-1">Validación de clientes NDA — +20 puntos al aprobar</p>
       </div>
+
+      {/* Actualizar resultados / ranking */}
+      <section className="card bg-nda-primary/5 border border-nda-primary/15">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h2 className="font-bold text-nda-dark">Resultados y ranking</h2>
+            <p className="text-sm text-nda-dark/60 mt-1 max-w-md">
+              Trae los resultados de los partidos terminados, calcula los puntos
+              y actualiza la tabla de posiciones. Usalo cuando termine una jornada.
+            </p>
+          </div>
+          <button
+            onClick={handleRefreshScores}
+            disabled={refreshing}
+            className="btn-primary !py-2.5 !px-5 shrink-0"
+          >
+            {refreshing ? "Actualizando..." : "🔄 Actualizar resultados ahora"}
+          </button>
+        </div>
+        {refreshMsg && (
+          <p className="text-sm mt-3 font-medium text-nda-dark">{refreshMsg}</p>
+        )}
+      </section>
 
       {error && (
         <p className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3">{error}</p>
