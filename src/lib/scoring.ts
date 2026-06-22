@@ -1,7 +1,8 @@
 import type { MatchStage } from "./supabase/types";
 
+// Etapas con bonus x2. Los dieciseisavos (LAST_32) puntúan x1, igual que
+// la fase de grupos: el x2 arranca recién en octavos (LAST_16).
 const ELIMINATION_STAGES: MatchStage[] = [
-  "LAST_32",
   "LAST_16",
   "QUARTER_FINALS",
   "SEMI_FINALS",
