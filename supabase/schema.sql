@@ -115,11 +115,13 @@ create table if not exists public.referrals (
 create index if not exists referrals_referrer_idx on public.referrals(referrer_id);
 
 -- =============================================================
--- Vista materializada del leaderboard
--- Refresco después de cada partido.
+-- Vista del leaderboard (NORMAL / en vivo)
+-- Se calcula al momento: nunca queda desactualizada. (Antes era una
+-- vista materializada que había que refrescar; ver
+-- supabase/leaderboard-vista-en-vivo.sql para la migración.)
 -- =============================================================
 
-create materialized view if not exists public.leaderboard as
+create or replace view public.leaderboard as
 with prediction_stats as (
   select
     p.user_id,
@@ -162,16 +164,17 @@ from public.profiles pr
 left join prediction_stats ps on ps.user_id = pr.id
 left join referral_bonus rb on rb.user_id = pr.id;
 
-create unique index if not exists leaderboard_user_idx on public.leaderboard(user_id);
+grant select on public.leaderboard to anon, authenticated;
 
--- Función para refrescar el leaderboard
+-- refresh_leaderboard quedó como no-op: la vista es normal (en vivo) y
+-- siempre está actualizada. Se mantiene la función para no romper el
+-- código que todavía la llama (score-runner).
 create or replace function public.refresh_leaderboard()
 returns void
 language plpgsql
-security definer
 as $$
 begin
-  refresh materialized view concurrently public.leaderboard;
+  return;
 end;
 $$;
 
