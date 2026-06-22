@@ -1,6 +1,7 @@
 import type { MatchStage } from "./supabase/types";
 
 const ELIMINATION_STAGES: MatchStage[] = [
+  "LAST_32",
   "LAST_16",
   "QUARTER_FINALS",
   "SEMI_FINALS",

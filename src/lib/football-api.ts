@@ -67,6 +67,7 @@ export async function fetchAllTeams(competition: string): Promise<FdTeam[]> {
 export function mapStage(stage: string): MatchStage {
   const map: Record<string, MatchStage> = {
     GROUP_STAGE: "GROUP_STAGE",
+    LAST_32: "LAST_32",
     LAST_16: "LAST_16",
     QUARTER_FINALS: "QUARTER_FINALS",
     SEMI_FINALS: "SEMI_FINALS",

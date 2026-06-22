@@ -20,6 +20,7 @@ const TZ = "America/Argentina/Buenos_Aires";
 
 const STAGE_LABELS: Record<MatchStage, string> = {
   GROUP_STAGE: "Fase de grupos",
+  LAST_32: "Dieciseisavos de final",
   LAST_16: "Octavos de final",
   QUARTER_FINALS: "Cuartos de final",
   SEMI_FINALS: "Semifinales",
@@ -28,6 +29,7 @@ const STAGE_LABELS: Record<MatchStage, string> = {
 };
 
 const KNOCKOUT_ORDER: MatchStage[] = [
+  "LAST_32",
   "LAST_16",
   "QUARTER_FINALS",
   "SEMI_FINALS",

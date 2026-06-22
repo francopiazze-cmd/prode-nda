@@ -427,6 +427,7 @@ function getResultLabel(
 function stageLabel(stage: string): string {
   const map: Record<string, string> = {
     GROUP_STAGE: "Fase de grupos",
+    LAST_32: "Dieciseisavos",
     LAST_16: "Octavos",
     QUARTER_FINALS: "Cuartos",
     SEMI_FINALS: "Semifinales",

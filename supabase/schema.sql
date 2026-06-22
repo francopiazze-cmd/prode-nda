@@ -231,8 +231,8 @@ begin
     end if;
   end if;
 
-  -- Bonus eliminatorias: x2
-  if match_stage in ('LAST_16', 'QUARTER_FINALS', 'SEMI_FINALS', 'THIRD_PLACE', 'FINAL') then
+  -- Bonus eliminatorias: x2 (incluye los dieciseisavos / LAST_32 del formato 2026)
+  if match_stage in ('LAST_32', 'LAST_16', 'QUARTER_FINALS', 'SEMI_FINALS', 'THIRD_PLACE', 'FINAL') then
     base_points := base_points * 2;
   end if;
 
