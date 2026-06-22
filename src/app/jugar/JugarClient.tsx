@@ -10,6 +10,8 @@ type Props = {
   matches: Match[];
   predictions: Prediction[];
   referralCode: string;
+  /** Hora del servidor (ISO) al renderizar — ancla anti-trampa de reloj */
+  serverNow: string;
 };
 
 type MainTab = "dias" | "grupos" | "eliminatorias";
@@ -180,11 +182,18 @@ function getDefaultGroup(matches: Match[]): string | null {
   return [...new Set(letters)].sort()[0] ?? null;
 }
 
-export function JugarClient({ matches, predictions, referralCode }: Props) {
+export function JugarClient({ matches, predictions, referralCode, serverNow }: Props) {
   const supabase = createClient();
   const [localPreds, setLocalPreds] = useState<Record<number, Prediction>>(() =>
     Object.fromEntries(predictions.map((p) => [p.match_id, p]))
   );
+  // Diferencia entre el reloj del dispositivo y el del servidor. Si el
+  // usuario adelanta/atrasa la hora del celular, este offset lo neutraliza:
+  // serverNowEstimado = Date.now() - clockOffsetMs.
+  const [clockOffsetMs, setClockOffsetMs] = useState(0);
+  useEffect(() => {
+    setClockOffsetMs(Date.now() - new Date(serverNow).getTime());
+  }, [serverNow]);
   const [mainTab, setMainTab] = useState<MainTab>("dias");
   const [selectedGroup, setSelectedGroup] = useState<string | null>(() =>
     getDefaultGroup(matches)
@@ -309,26 +318,33 @@ export function JugarClient({ matches, predictions, referralCode }: Props) {
   async function savePrediction(matchId: number, home: number, away: number) {
     const { data: userResp } = await supabase.auth.getUser();
     const userId = userResp.user?.id;
-    if (!userId) return;
+    if (!userId) throw new Error("Sesión vencida. Volvé a entrar.");
 
     const existing = localPreds[matchId];
-    if (existing) {
-      const { data, error } = await supabase
-        .from("predictions")
-        .update({ home_score: home, away_score: away, updated_at: new Date().toISOString() })
-        .eq("id", existing.id)
-        .select()
-        .single();
-      // Functional setState evita pisar updates concurrentes
-      if (!error && data) setLocalPreds((prev) => ({ ...prev, [matchId]: data }));
-    } else {
-      const { data, error } = await supabase
-        .from("predictions")
-        .insert({ user_id: userId, match_id: matchId, home_score: home, away_score: away })
-        .select()
-        .single();
-      if (!error && data) setLocalPreds((prev) => ({ ...prev, [matchId]: data }));
+    const { data, error } = existing
+      ? await supabase
+          .from("predictions")
+          .update({ home_score: home, away_score: away, updated_at: new Date().toISOString() })
+          .eq("id", existing.id)
+          .select()
+          .single()
+      : await supabase
+          .from("predictions")
+          .insert({ user_id: userId, match_id: matchId, home_score: home, away_score: away })
+          .select()
+          .single();
+
+    if (error) {
+      // El trigger anti-trampa rechaza pronósticos de partidos ya empezados.
+      const cerrado = /cerrado|check_violation|arranc/i.test(error.message);
+      throw new Error(
+        cerrado
+          ? "Este partido ya cerró. No se puede cargar ni modificar el pronóstico."
+          : "No se pudo guardar. Probá de nuevo."
+      );
     }
+    // Functional setState evita pisar updates concurrentes
+    if (data) setLocalPreds((prev) => ({ ...prev, [matchId]: data }));
   }
 
   return (
@@ -477,6 +493,7 @@ export function JugarClient({ matches, predictions, referralCode }: Props) {
                         match={m}
                         prediction={localPreds[m.id] ?? null}
                         onSave={(h, a) => savePrediction(m.id, h, a)}
+                        clockOffsetMs={clockOffsetMs}
                       />
                     ))}
                   </div>
@@ -540,6 +557,7 @@ export function JugarClient({ matches, predictions, referralCode }: Props) {
                       match={m}
                       prediction={localPreds[m.id] ?? null}
                       onSave={(h, a) => savePrediction(m.id, h, a)}
+                      clockOffsetMs={clockOffsetMs}
                     />
                   ))
                 )}
@@ -590,6 +608,7 @@ export function JugarClient({ matches, predictions, referralCode }: Props) {
                       match={m}
                       prediction={localPreds[m.id] ?? null}
                       onSave={(h, a) => savePrediction(m.id, h, a)}
+                      clockOffsetMs={clockOffsetMs}
                     />
                   ))
                 )}

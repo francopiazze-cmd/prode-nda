@@ -31,6 +31,7 @@ export default async function JugarPage() {
           matches={matches ?? []}
           predictions={predictions ?? []}
           referralCode={profile?.referral_code ?? ""}
+          serverNow={new Date().toISOString()}
         />
       </main>
     </>

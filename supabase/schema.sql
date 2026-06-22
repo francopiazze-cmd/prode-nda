@@ -422,3 +422,53 @@ create policy "matches_select_all" on public.matches for select using (true);
 
 drop policy if exists "teams_select_all" on public.teams;
 create policy "teams_select_all" on public.teams for select using (true);
+
+-- =============================================================
+-- ANTI-TRAMPA: bloqueo de pronósticos por horario (server-side)
+-- =============================================================
+-- Impide insertar o modificar un pronóstico una vez que el partido
+-- arrancó (o está por arrancar). Usa now() del SERVIDOR de Postgres,
+-- que es imposible de falsificar cambiando el reloj del celular.
+--
+-- Solo bloquea cambios al PRONÓSTICO (home_score/away_score). El
+-- proceso de scoring, que actualiza points_awarded en partidos ya
+-- terminados, no se ve afectado.
+create or replace function public.enforce_prediction_lock()
+returns trigger
+language plpgsql
+as $$
+declare
+  m record;
+  lock_minutes constant int := 5;
+begin
+  -- En UPDATE, si el pronóstico no cambia (ej: scoring seteando
+  -- points_awarded), permitir sin chequear el horario.
+  if tg_op = 'UPDATE'
+     and new.home_score is not distinct from old.home_score
+     and new.away_score is not distinct from old.away_score then
+    return new;
+  end if;
+
+  select utc_kickoff, status into m
+  from public.matches
+  where id = new.match_id;
+
+  if not found then
+    raise exception 'Partido inexistente';
+  end if;
+
+  if m.status <> 'SCHEDULED'
+     or now() >= (m.utc_kickoff - make_interval(mins => lock_minutes)) then
+    raise exception 'Pronostico cerrado: el partido ya arranco o esta por arrancar'
+      using errcode = 'check_violation';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_enforce_prediction_lock on public.predictions;
+create trigger trg_enforce_prediction_lock
+  before insert or update on public.predictions
+  for each row
+  execute function public.enforce_prediction_lock();

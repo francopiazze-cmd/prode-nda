@@ -161,16 +161,22 @@ type Props = {
   match: Match;
   prediction: Prediction | null;
   onSave: (homeScore: number, awayScore: number) => Promise<void>;
+  /** Diferencia reloj-dispositivo vs servidor (ms). Neutraliza el cambio de
+   *  hora del celular: serverNow ≈ Date.now() - clockOffsetMs. */
+  clockOffsetMs?: number;
 };
 
-export function MatchCard({ match, prediction, onSave }: Props) {
+export function MatchCard({ match, prediction, onSave, clockOffsetMs = 0 }: Props) {
   // null = sin cargar todavía (placeholder visible)
   // number = valor ingresado (incluido 0)
   const [home, setHome] = useState<number | null>(prediction?.home_score ?? null);
   const [away, setAway] = useState<number | null>(prediction?.away_score ?? null);
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
-  const locked = isPredictionLocked(match.utc_kickoff);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  // Hora del servidor estimada — NO el reloj crudo del dispositivo (anti-trampa)
+  const serverNow = new Date(Date.now() - clockOffsetMs);
+  const locked = isPredictionLocked(match.utc_kickoff, serverNow);
   const finished = match.status === "FINISHED";
   const live = match.status === "LIVE";
   const points = finished && prediction
@@ -203,9 +209,12 @@ export function MatchCard({ match, prediction, onSave }: Props) {
     const h = home ?? 0;
     const a = away ?? 0;
     setSaving(true);
+    setSaveError(null);
     try {
       await onSave(h, a);
       setSavedAt(Date.now());
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "No se pudo guardar.");
     } finally {
       setSaving(false);
     }
@@ -305,16 +314,23 @@ export function MatchCard({ match, prediction, onSave }: Props) {
       )}
 
       {!finished && (
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-xs text-nda-dark/60">
-            {locked ? "Pronóstico cerrado" : "Cierra 5 min antes del kickoff"}
-          </span>
-          {!locked && (
-            <button onClick={handleSave} disabled={saving} className="btn-primary !py-2 !px-4 text-sm">
-              {saving ? "Guardando..." : savedAt ? "Guardado ✓" : prediction ? "Actualizar" : "Guardar"}
-            </button>
+        <>
+          <div className="mt-4 flex items-center justify-between">
+            <span className="text-xs text-nda-dark/60">
+              {locked ? "Pronóstico cerrado" : "Cierra 5 min antes del kickoff"}
+            </span>
+            {!locked && (
+              <button onClick={handleSave} disabled={saving} className="btn-primary !py-2 !px-4 text-sm">
+                {saving ? "Guardando..." : savedAt ? "Guardado ✓" : prediction ? "Actualizar" : "Guardar"}
+              </button>
+            )}
+          </div>
+          {saveError && (
+            <p className="mt-2 text-xs font-medium text-red-600 bg-red-50 rounded-lg px-3 py-2">
+              {saveError}
+            </p>
           )}
-        </div>
+        </>
       )}
     </div>
   );

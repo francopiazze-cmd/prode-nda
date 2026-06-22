@@ -118,7 +118,7 @@ export default async function HomePage() {
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
             <PrizeCard place="1°" highlight icon={<TvIcon />} title="Smart TV 55″" desc="Al campeón del prode." />
-            <PrizeCard place="2°" icon={<CoffeeIcon />} title="Cafetera Nespresso" desc="Para el subcampeón." />
+            <PrizeCard place="2°" icon={<ShirtIcon />} title="Camiseta de Argentina" desc="Camiseta oficial de la Selección Argentina para el subcampeón." />
             <PrizeCard place="3°" icon={<ForkKnifeIcon />} title="Gift card cena" desc="Kansas Nordelta" />
             <PrizeCard place="Embajador" icon={<StarGroupIcon />} title="Premio especial" desc="Para quien más amigos sume al prode. Si convertís tu grupo de WhatsApp en jugadores, ganás aunque no aciertes un solo partido." />
           </div>
@@ -274,9 +274,9 @@ function TvIcon() {
     <svg {...iconProps}><rect x="2" y="5" width="20" height="13" rx="2" /><path d="M8 21h8M12 18v3" /></svg>
   );
 }
-function CoffeeIcon() {
+function ShirtIcon() {
   return (
-    <svg {...iconProps}><path d="M17 8h1a4 4 0 0 1 0 8h-1" /><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z" /><path d="M6 2v3M10 2v3M14 2v3" /></svg>
+    <svg {...iconProps}><path d="M9 3L4 6l2 4 2-1v9h8v-9l2 1 2-4-5-3a3 3 0 0 1-6 0z" /></svg>
   );
 }
 function DishIcon() {

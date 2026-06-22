@@ -20,7 +20,7 @@ export async function sendWelcomeEmail(to: string, name: string, referralCode: s
         </p>
         <p>Cada amigo que se registre con tu link y juegue al menos un pronóstico te suma <strong>+2 puntos</strong> (hasta 10 amigos = máx. 20 pts al ranking principal). Si invitás más, competís por el <strong>premio Embajador</strong>.</p>
         <p>¿Sos cliente de NDA? Si ya tenés una póliza con nosotros y cargaste tu patente al registrarte, te sumamos <strong>+20 puntos</strong> de ventaja una vez validada.</p>
-        <p>Premios: <strong>1°</strong> Smart TV 55" · <strong>2°</strong> Cafetera Nespresso · <strong>3°</strong> Gift card cena en Kansas Nordelta · <strong>Embajador</strong> (más referidos).</p>
+        <p>Premios: <strong>1°</strong> Smart TV 55" · <strong>2°</strong> Camiseta de la Selección Argentina · <strong>3°</strong> Gift card cena en Kansas Nordelta · <strong>Embajador</strong> (más referidos).</p>
         <p style="margin-top:32px;font-size:13px;color:#888">
           NDA Asesores · prode.ndasesores.com.ar<br>
           Si no querés recibir más mails, podés darte de baja en tu perfil.

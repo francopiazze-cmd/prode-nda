@@ -57,7 +57,7 @@ export default function BasesPage() {
       <h2>5. Premios</h2>
       <ul>
         <li><strong>1° puesto del ranking general:</strong> Smart TV 55" (marca y modelo a confirmar al cierre del concurso).</li>
-        <li><strong>2° puesto del ranking general:</strong> Cafetera Nespresso (modelo a confirmar).</li>
+        <li><strong>2° puesto del ranking general:</strong> Camiseta oficial de la Selección Argentina (talle a confirmar con el ganador).</li>
         <li><strong>3° puesto del ranking general:</strong> Gift card para una cena en Kansas Nordelta.</li>
         <li>
           <strong>Premio Embajador:</strong> participante con mayor cantidad de referidos confirmados (sin tope).
