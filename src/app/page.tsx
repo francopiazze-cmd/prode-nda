@@ -122,9 +122,6 @@ export default async function HomePage() {
             <PrizeCard place="3°" icon={<ForkKnifeIcon />} title="Gift card cena" desc="Kansas Nordelta" />
             <PrizeCard place="Embajador" icon={<StarGroupIcon />} title="Premio especial" desc="Para quien más amigos sume al prode. Si convertís tu grupo de WhatsApp en jugadores, ganás aunque no aciertes un solo partido." />
           </div>
-          <div className="mt-3 grid grid-cols-1 gap-3">
-            <PrizeCard place="🏅 Semanal" icon={<SoccerBallIcon />} title="Pelota oficial" desc="Sorteamos una pelota entre los 10 mejores de cada semana. Más arriba estás, más chances tenés." />
-          </div>
         </section>
 
         {/* ¿POR QUÉ EN NDA ARMAMOS ESTO? */}
@@ -297,10 +294,5 @@ function ForkKnifeIcon() {
 function StarGroupIcon() {
   return (
     <svg {...iconProps}><path d="M17 21v-2a4 4 0 0 0-3-3.87" /><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" /></svg>
-  );
-}
-function SoccerBallIcon() {
-  return (
-    <svg {...iconProps}><circle cx="12" cy="12" r="10" /><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3" /></svg>
   );
 }
