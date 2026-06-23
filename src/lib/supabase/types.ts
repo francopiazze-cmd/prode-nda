@@ -74,7 +74,14 @@ export type LeaderboardRow = {
   referral_code: string;
   registered_at: string;
   total_points: number;
+  prediction_points: number;
   exact_hits: number;
+  aciertos_exactos: number;
+  aciertos_diferencia: number;
+  aciertos_ganador: number;
+  errados: number;
+  jugados: number;
+  total_predicciones: number;
   argentina_hits: number;
   referral_points: number;
   referral_count: number;
