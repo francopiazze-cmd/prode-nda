@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MatchCard } from "@/components/MatchCard";
+import { KnockoutBracket } from "@/components/KnockoutBracket";
 import { ReferralBox } from "@/components/ReferralBox";
 import { createClient } from "@/lib/supabase/client";
-import type { Match, Prediction, MatchStage } from "@/lib/supabase/types";
+import type { Match, Prediction } from "@/lib/supabase/types";
 
 type Props = {
   matches: Match[];
@@ -17,25 +18,6 @@ type Props = {
 type MainTab = "dias" | "grupos" | "eliminatorias";
 
 const TZ = "America/Argentina/Buenos_Aires";
-
-const STAGE_LABELS: Record<MatchStage, string> = {
-  GROUP_STAGE: "Fase de grupos",
-  LAST_32: "Dieciseisavos de final",
-  LAST_16: "Octavos de final",
-  QUARTER_FINALS: "Cuartos de final",
-  SEMI_FINALS: "Semifinales",
-  THIRD_PLACE: "Tercer puesto",
-  FINAL: "Final",
-};
-
-const KNOCKOUT_ORDER: MatchStage[] = [
-  "LAST_32",
-  "LAST_16",
-  "QUARTER_FINALS",
-  "SEMI_FINALS",
-  "THIRD_PLACE",
-  "FINAL",
-];
 
 // ─── Helpers de días (zona horaria Argentina) ───
 
@@ -136,28 +118,6 @@ function isPlayedDay(key: string, tk: string): boolean {
  * 3. Último partido jugado → su etapa
  * 4. Default: GROUP_STAGE
  */
-function getActiveStage(matches: Match[]): MatchStage {
-  const live = matches.find((m) => m.status === "LIVE");
-  if (live) return live.stage;
-
-  const upcoming = [...matches]
-    .filter((m) => m.status === "SCHEDULED")
-    .sort(
-      (a, b) =>
-        new Date(a.utc_kickoff).getTime() - new Date(b.utc_kickoff).getTime()
-    );
-  if (upcoming.length > 0) return upcoming[0].stage;
-
-  const finished = [...matches]
-    .filter((m) => m.status === "FINISHED")
-    .sort(
-      (a, b) =>
-        new Date(b.utc_kickoff).getTime() - new Date(a.utc_kickoff).getTime()
-    );
-  if (finished.length > 0) return finished[0].stage;
-
-  return "GROUP_STAGE";
-}
 
 /**
  * Devuelve el grupo más relevante para mostrar:
@@ -200,11 +160,6 @@ export function JugarClient({ matches, predictions, referralCode, serverNow }: P
   const [selectedGroup, setSelectedGroup] = useState<string | null>(() =>
     getDefaultGroup(matches)
   );
-  const [selectedStage, setSelectedStage] = useState<MatchStage | null>(() => {
-    const stage = getActiveStage(matches);
-    return stage !== "GROUP_STAGE" ? stage : null;
-  });
-
   // ─── Días ───
   const days = useMemo(() => buildDays(matches), [matches]);
   // Inicializa con el primer día (server-stable, sin reloj) y corrige en cliente
@@ -275,38 +230,28 @@ export function JugarClient({ matches, predictions, referralCode, serverNow }: P
     return [...new Set(letters)].sort();
   }, [matches]);
 
-  // Obtener fases de eliminatoria disponibles
-  const knockoutStages = useMemo(() => {
-    const stages = matches
-      .filter((m) => m.stage !== "GROUP_STAGE")
-      .map((m) => m.stage);
-    const unique = [...new Set(stages)];
-    return KNOCKOUT_ORDER.filter((s) => unique.includes(s));
-  }, [matches]);
-
   // Fallback: si el usuario cambia de tab y el estado es null, auto-seleccionar
   useEffect(() => {
     if (mainTab === "grupos" && !selectedGroup && groups.length > 0) {
       setSelectedGroup(groups[0]);
     }
-    if (mainTab === "eliminatorias" && !selectedStage && knockoutStages.length > 0) {
-      // Preferir la etapa activa del torneo si ya está en la lista
-      const active = getActiveStage(matches);
-      const best = knockoutStages.includes(active) ? active : knockoutStages[0];
-      setSelectedStage(best);
-    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainTab]);
 
-  // Partidos filtrados según la selección
-  const filteredMatches = useMemo(() => {
-    if (mainTab === "grupos") {
-      return matches.filter(
+  // Partidos de grupos según el grupo elegido
+  const filteredMatches = useMemo(
+    () =>
+      matches.filter(
         (m) => m.stage === "GROUP_STAGE" && m.group_letter === selectedGroup
-      );
-    }
-    return matches.filter((m) => m.stage === selectedStage);
-  }, [matches, mainTab, selectedGroup, selectedStage]);
+      ),
+    [matches, selectedGroup]
+  );
+
+  // Partidos de eliminatorias (para el cuadro)
+  const knockoutMatches = useMemo(
+    () => matches.filter((m) => m.stage !== "GROUP_STAGE"),
+    [matches]
+  );
 
   // Progreso de predicciones por grupo
   function groupProgress(letter: string) {
@@ -572,7 +517,7 @@ export function JugarClient({ matches, predictions, referralCode, serverNow }: P
       {/* ELIMINATORIAS */}
       {mainTab === "eliminatorias" && (
         <div className="space-y-4">
-          {knockoutStages.length === 0 ? (
+          {knockoutMatches.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-4xl mb-3">🗓️</p>
               <p className="text-nda-dark/60 font-medium">Las eliminatorias arrancan cuando termina la fase de grupos.</p>
@@ -580,41 +525,12 @@ export function JugarClient({ matches, predictions, referralCode, serverNow }: P
             </div>
           ) : (
             <>
-              {/* Selector de fase */}
-              <div className="flex gap-2 flex-wrap">
-                {knockoutStages.map((stage) => (
-                  <button
-                    key={stage}
-                    onClick={() => setSelectedStage(stage)}
-                    className={`rounded-full px-4 py-1.5 text-sm font-medium border transition ${
-                      selectedStage === stage
-                        ? "bg-nda-primary text-white border-nda-primary"
-                        : "bg-white text-nda-dark border-nda-primary/20 hover:bg-nda-soft"
-                    }`}
-                  >
-                    {STAGE_LABELS[stage]}
-                  </button>
-                ))}
-              </div>
-
-              {/* Partidos de la fase */}
-              <div className="space-y-3">
-                {filteredMatches.length === 0 ? (
-                  <p className="text-center text-nda-dark/60 py-8">
-                    No hay partidos en esta fase todavía.
-                  </p>
-                ) : (
-                  filteredMatches.map((m) => (
-                    <MatchCard
-                      key={m.id}
-                      match={m}
-                      prediction={localPreds[m.id] ?? null}
-                      onSave={(h, a) => savePrediction(m.id, h, a)}
-                      clockOffsetMs={clockOffsetMs}
-                    />
-                  ))
-                )}
-              </div>
+              <p className="text-sm text-nda-dark/60">
+                Los equipos se completan solos cuando termine la fase de grupos. Los
+                pronósticos de estos partidos los cargás desde{" "}
+                <strong>📅 Por día</strong>.
+              </p>
+              <KnockoutBracket matches={knockoutMatches} />
             </>
           )}
         </div>
