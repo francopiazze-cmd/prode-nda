@@ -6,9 +6,11 @@ import type { LeaderboardRow } from "@/lib/supabase/types";
 type Props = {
   rows: LeaderboardRow[];
   currentUserId: string | null;
+  /** Total de partidos ya jugados (igual para todos) */
+  playedMatches: number;
 };
 
-export function Leaderboard({ rows, currentUserId }: Props) {
+export function Leaderboard({ rows, currentUserId, playedMatches }: Props) {
   // Desempate: total_points desc, exact_hits desc, argentina_hits desc, registered_at asc
   const sorted = [...rows].sort((a, b) => {
     if (b.total_points !== a.total_points) return b.total_points - a.total_points;
@@ -87,6 +89,7 @@ export function Leaderboard({ rows, currentUserId }: Props) {
           row={selected.row}
           pos={selected.pos}
           isMe={selected.row.user_id === currentUserId}
+          playedMatches={playedMatches}
           onClose={() => setSelected(null)}
         />
       )}
@@ -98,11 +101,13 @@ function PerformanceModal({
   row,
   pos,
   isMe,
+  playedMatches,
   onClose,
 }: {
   row: LeaderboardRow;
   pos: number;
   isMe: boolean;
+  playedMatches: number;
   onClose: () => void;
 }) {
   // Partidos jugados con pronóstico = suma del desglose (siempre coincide
@@ -148,8 +153,8 @@ function PerformanceModal({
         </div>
 
         <p className="text-xs text-nda-dark/60 mt-3">
-          {row.prediction_points ?? 0} pts en {jugados}{" "}
-          {jugados === 1 ? "partido jugado" : "partidos jugados"}.
+          Pronosticó {jugados} de los {playedMatches} partidos ya jugados ·{" "}
+          {row.prediction_points ?? 0} pts.
           {row.referral_count > 0 && (
             <> · {row.referral_count}{" "}
               {row.referral_count === 1 ? "amigo invitado" : "amigos invitados"}.</>

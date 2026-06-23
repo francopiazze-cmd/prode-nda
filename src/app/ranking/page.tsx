@@ -11,9 +11,10 @@ export default async function RankingPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: rows }] = await Promise.all([
+  const [{ data: profile }, { data: rows }, { count: playedMatches }] = await Promise.all([
     supabase.from("profiles").select("full_name, referral_code").eq("id", user.id).single(),
-    supabase.from("leaderboard").select("*").order("total_points", { ascending: false }).limit(200)
+    supabase.from("leaderboard").select("*").order("total_points", { ascending: false }).limit(200),
+    supabase.from("matches").select("*", { count: "exact", head: true }).eq("status", "FINISHED")
   ]);
 
   return (
@@ -24,7 +25,7 @@ export default async function RankingPage() {
         <p className="text-sm text-nda-dark/70 mb-6">
           Top 200. Se actualiza después de cada partido.
         </p>
-        <Leaderboard rows={(rows as LeaderboardRow[]) ?? []} currentUserId={user.id} />
+        <Leaderboard rows={(rows as LeaderboardRow[]) ?? []} currentUserId={user.id} playedMatches={playedMatches ?? 0} />
       </main>
     </>
   );
