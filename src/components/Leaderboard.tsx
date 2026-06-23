@@ -105,6 +105,13 @@ function PerformanceModal({
   isMe: boolean;
   onClose: () => void;
 }) {
+  // Partidos jugados con pronóstico = suma del desglose (siempre coincide
+  // con los 4 cuadritos, sin importar si algún match recién terminó).
+  const jugados =
+    (row.aciertos_exactos ?? 0) +
+    (row.aciertos_diferencia ?? 0) +
+    (row.aciertos_ganador ?? 0) +
+    (row.errados ?? 0);
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-nda-dark/40 backdrop-blur-sm px-4"
@@ -141,8 +148,12 @@ function PerformanceModal({
         </div>
 
         <p className="text-xs text-nda-dark/60 mt-3">
-          {row.prediction_points ?? 0} pts por pronósticos · {row.jugados ?? 0} de {row.total_predicciones ?? 0} partidos ya jugados.
-          {row.referral_count > 0 && <> · {row.referral_count} amigos invitados.</>}
+          {row.prediction_points ?? 0} pts en {jugados}{" "}
+          {jugados === 1 ? "partido jugado" : "partidos jugados"}.
+          {row.referral_count > 0 && (
+            <> · {row.referral_count}{" "}
+              {row.referral_count === 1 ? "amigo invitado" : "amigos invitados"}.</>
+          )}
         </p>
       </div>
     </div>
