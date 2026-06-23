@@ -42,6 +42,8 @@ referral_bonus as (
   where bonus_awarded = true
   group by referrer_id
 )
+-- IMPORTANTE: las columnas viejas van primero y en el mismo orden; las
+-- nuevas se agregan AL FINAL (si no, create or replace view falla).
 select
   pr.id as user_id,
   pr.full_name,
@@ -50,18 +52,19 @@ select
   coalesce(ps.base_points, 0)
     + coalesce(rb.bonus_points, 0)
     + case when pr.nda_client_verified then 20 else 0 end as total_points,
-  coalesce(ps.base_points, 0) as prediction_points,
   coalesce(ps.exact_hits, 0) as exact_hits,
+  coalesce(ps.argentina_hits, 0) as argentina_hits,
+  coalesce(rb.bonus_points, 0) as referral_points,
+  coalesce(rb.referral_count, 0) as referral_count,
+  case when pr.nda_client_verified then 20 else 0 end as nda_bonus_points,
+  -- columnas nuevas (desglose público)
+  coalesce(ps.base_points, 0) as prediction_points,
   coalesce(ps.aciertos_exactos, 0) as aciertos_exactos,
   coalesce(ps.aciertos_diferencia, 0) as aciertos_diferencia,
   coalesce(ps.aciertos_ganador, 0) as aciertos_ganador,
   coalesce(ps.errados, 0) as errados,
   coalesce(ps.jugados, 0) as jugados,
-  coalesce(pt.total_predicciones, 0) as total_predicciones,
-  coalesce(ps.argentina_hits, 0) as argentina_hits,
-  coalesce(rb.bonus_points, 0) as referral_points,
-  coalesce(rb.referral_count, 0) as referral_count,
-  case when pr.nda_client_verified then 20 else 0 end as nda_bonus_points
+  coalesce(pt.total_predicciones, 0) as total_predicciones
 from public.profiles pr
 left join prediction_stats ps on ps.user_id = pr.id
 left join pred_totals pt on pt.user_id = pr.id
