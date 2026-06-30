@@ -4,7 +4,8 @@ import {
   fetchAllMatches,
   fetchAllTeams,
   mapStage,
-  mapStatus
+  mapStatus,
+  playedGoals
 } from "@/lib/football-api";
 
 /**
@@ -54,20 +55,24 @@ async function handle(req: NextRequest) {
       if (teamsErr) throw teamsErr;
     }
 
-    const matchRows = matches.map((m) => ({
-      id: m.id,
-      utc_kickoff: m.utcDate,
-      status: mapStatus(m.status),
-      stage: mapStage(m.stage),
-      group_letter: m.group?.replace("GROUP_", "") ?? null,
-      home_team_id: m.homeTeam.id,
-      away_team_id: m.awayTeam.id,
-      home_team_name: m.homeTeam.name,
-      away_team_name: m.awayTeam.name,
-      home_score: m.score.fullTime.home,
-      away_score: m.score.fullTime.away,
-      updated_at: new Date().toISOString()
-    }));
+    const matchRows = matches.map((m) => {
+      // Resultado jugado (90' + alargue), sin penales.
+      const goals = playedGoals(m.score);
+      return {
+        id: m.id,
+        utc_kickoff: m.utcDate,
+        status: mapStatus(m.status),
+        stage: mapStage(m.stage),
+        group_letter: m.group?.replace("GROUP_", "") ?? null,
+        home_team_id: m.homeTeam.id,
+        away_team_id: m.awayTeam.id,
+        home_team_name: m.homeTeam.name,
+        away_team_name: m.awayTeam.name,
+        home_score: goals.home,
+        away_score: goals.away,
+        updated_at: new Date().toISOString()
+      };
+    });
 
     if (matchRows.length > 0) {
       const { error: matchesErr } = await admin.from("matches").upsert(matchRows);

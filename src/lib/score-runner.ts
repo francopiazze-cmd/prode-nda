@@ -3,6 +3,7 @@ import {
   fetchAllMatches,
   mapStatus,
   mapStage,
+  playedGoals,
   type FdMatch,
 } from "@/lib/football-api";
 import { scorePrediction } from "@/lib/scoring";
@@ -48,13 +49,15 @@ export async function runScoring(): Promise<ScoreResult> {
     const newStatus = mapStatus(fd.status);
     const newStage = mapStage(fd.stage);
     const local = localMap.get(fd.id);
+    // Resultado jugado (90' + alargue), SIN penales — es lo que vale para el prode.
+    const goals = playedGoals(fd.score);
 
     await admin
       .from("matches")
       .update({
         status: newStatus,
-        home_score: fd.score.fullTime.home,
-        away_score: fd.score.fullTime.away,
+        home_score: goals.home,
+        away_score: goals.away,
         stage: newStage,
         updated_at: new Date().toISOString(),
       })
@@ -66,14 +69,13 @@ export async function runScoring(): Promise<ScoreResult> {
     const resultChanged =
       alreadyScored &&
       local != null &&
-      (local.home_score !== fd.score.fullTime.home ||
-        local.away_score !== fd.score.fullTime.away);
+      (local.home_score !== goals.home || local.away_score !== goals.away);
 
     if (
       newStatus === "FINISHED" &&
       (!alreadyScored || resultChanged) &&
-      fd.score.fullTime.home != null &&
-      fd.score.fullTime.away != null
+      goals.home != null &&
+      goals.away != null
     ) {
       const updated = await scoreAllPredictionsForMatch(admin, fd, newStage);
       updatedPredictions += updated;
@@ -97,8 +99,9 @@ async function scoreAllPredictionsForMatch(
   match: FdMatch,
   stage: MatchStage
 ): Promise<number> {
-  const homeScore = match.score.fullTime.home as number;
-  const awayScore = match.score.fullTime.away as number;
+  const goals = playedGoals(match.score);
+  const homeScore = goals.home as number;
+  const awayScore = goals.away as number;
 
   const { data: preds } = await admin
     .from("predictions")

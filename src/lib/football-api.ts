@@ -20,9 +20,29 @@ type FdMatch = {
   awayTeam: { id: number | null; name: string | null; tla: string | null; crest: string | null };
   score: {
     fullTime: { home: number | null; away: number | null };
+    penalties?: { home: number | null; away: number | null } | null;
+    duration?: string | null;
     winner: string | null;
   };
 };
+
+/**
+ * Goles "del partido" para puntuar el prode: 90' + tiempo extra, SIN penales.
+ * football-data suma la tanda de penales al fullTime (ej: 1-1 que termina
+ * 2-3 en penales aparece como fullTime 3-4), así que la descontamos.
+ */
+export function playedGoals(score: FdMatch["score"]): {
+  home: number | null;
+  away: number | null;
+} {
+  const ft = score.fullTime;
+  if (ft.home == null || ft.away == null) return { home: ft.home, away: ft.away };
+  const pen = score.penalties;
+  if (pen && pen.home != null && pen.away != null) {
+    return { home: ft.home - pen.home, away: ft.away - pen.away };
+  }
+  return { home: ft.home, away: ft.away };
+}
 
 type FdTeam = {
   id: number;
