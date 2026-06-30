@@ -61,9 +61,17 @@ export async function runScoring(): Promise<ScoreResult> {
       .eq("id", fd.id);
 
     const alreadyScored = !!local?.scored_at;
+    // Si la API corrige el resultado de un partido ya puntuado, hay que
+    // RE-puntuar (los puntos viejos quedaron calculados con el marcador viejo).
+    const resultChanged =
+      alreadyScored &&
+      local != null &&
+      (local.home_score !== fd.score.fullTime.home ||
+        local.away_score !== fd.score.fullTime.away);
+
     if (
       newStatus === "FINISHED" &&
-      !alreadyScored &&
+      (!alreadyScored || resultChanged) &&
       fd.score.fullTime.home != null &&
       fd.score.fullTime.away != null
     ) {
